@@ -133,7 +133,7 @@ function Nav() {
               <div>My Networks</div>
             </div>
             <button
-              className="w-[100%] h-[40px] rounded-full border-2 border-[#ec4545] text-[#ec4545]"
+              className="w-[100%] h-[40px] rounded-full border-2 border-[#2dc0ff] text-[#2dc0ff]"
               onClick={handleSignOut}
             >
               Sign Out
