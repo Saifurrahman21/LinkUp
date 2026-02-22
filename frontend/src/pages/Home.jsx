@@ -5,11 +5,15 @@ import { FiPlus } from "react-icons/fi";
 import { FiCamera } from "react-icons/fi";
 import { HiPencil } from "react-icons/hi";
 import { userDataContext } from "../context/userContext";
+import EditProfile from "../components/EditProfile";
 
 function Home() {
   let { userData, setUserData } = useContext(userDataContext);
+
+  let [edit, setEdit] = useState(false);
   return (
     <div className="w-full min-h-[100vh] bg-[#f0efe7] pt-[100px] flex items-start justify-center gap-[20px] px-[20px]">
+      <EditProfile edit={edit} />
       <Nav />
       <div className="w-full lg:w-[25%] min-h-[200px] bg-white shadow-lg rounded-lg relative">
         <div className="w-[100%] h-[100px] bg-gray-400 rounded overflow-hidden flex items-center justify-center cursor-pointer">
