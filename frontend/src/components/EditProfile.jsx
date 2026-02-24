@@ -14,7 +14,21 @@ function EditProfile() {
   let [location, setLocation] = useState(userData.location || "");
   let [gender, setGender] = useState(userData.gender || "");
   let [skills, setSkills] = useState(userData.skills || []);
-  let [newSkill, setNewSkill] = useState([]);
+  let [newSkills, setNewSkills] = useState("");
+
+  function addSkill(e) {
+    e.preventDefault();
+    if (newSkills && !skills.includes(newSkills)) {
+      setSkills([...skills, newSkills]);
+    }
+    setNewSkills("");
+  }
+
+  function removeSkill(skill) {
+    if (skills.includes(skill)) {
+      setSkills(skills.filter((s) => s !== skill));
+    }
+  }
 
   return (
     <div className="w-full h-[100vh] fixed top-0 z-[100] flex justify-center items-center">
@@ -36,7 +50,7 @@ function EditProfile() {
             <FiPlus className="text-white" />
           </div>
         </div>
-        <form
+        <div
           action=""
           className=" w-full flex flex-col items-center justify-center gap-[20px] mt-[50px] "
         >
@@ -83,18 +97,43 @@ function EditProfile() {
             onChange={(e) => setGender(e.target.value)}
           />
 
-          <div>
-            <h1>Skills</h1>
+          <div className="w-full p-[10px] border-2 border-gray-600 flex flex-col gap-[10px] rounded-lg">
+            <h1 className="text-[19px] font-semibold">Skills</h1>
             {skills && (
-              <div>
-                {" "}
+              <div className="flex flex-col gap-[10px]">
                 {skills.map((skill, index) => (
-                  <div key={index}>{skill}</div>
+                  <div
+                    key={index}
+                    className="w-full h-[400px] border-[1px] border-gray-600 bg-gray-200 p-[10px] flex justify-between items-center"
+                  >
+                    <span>
+                      {skill}{" "}
+                      <RxCross1
+                        className="w-[20px] h-[20px] text-gray-800 font-bold cursor-pointer"
+                        onClick={() => removeSkill(skill)}
+                      />
+                    </span>
+                  </div>
                 ))}
               </div>
             )}
+            <div action="" className="flex flex-col gap-[10px] items-start">
+              <input
+                type="text"
+                placeholder="add new skills"
+                value={newSkills}
+                onChange={(e) => setNewSkills(e.target.value)}
+                className="w-full h-[50px] outline-none border-gray-600 px-[10px] py[5px] text-[16px] border-2 rounded-lg"
+              />
+              <button
+                className="w-[100%] h-[40px] rounded-full border-2 border-[#2dc0ff] text-[#2dc0ff]"
+                onClick={addSkill}
+              >
+                Add
+              </button>
+            </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
