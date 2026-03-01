@@ -4,6 +4,7 @@ import { userDataContext } from "../context/userContext";
 import dp from "../assets/dp.webp";
 import { FiPlus } from "react-icons/fi";
 import { FiCamera } from "react-icons/fi";
+import { set } from "mongoose";
 
 function EditProfile() {
   let { edit, setEdit, userData, setUserData } = useContext(userDataContext);
@@ -15,6 +16,18 @@ function EditProfile() {
   let [gender, setGender] = useState(userData.gender || "");
   let [skills, setSkills] = useState(userData.skills || []);
   let [newSkills, setNewSkills] = useState("");
+  let [education, setEducation] = useState(userData.education || []);
+  let [newEducation, setNewEducation] = useState({
+    college: "",
+    degree: "",
+    fieldOfStudy: "",
+  });
+  let [experience, setExperience] = useState(userData.experience || []);
+  let [newExperience, setNewExperience] = useState({
+    title: "",
+    company: "",
+    description: "",
+  });
 
   function addSkill(e) {
     e.preventDefault();
@@ -27,6 +40,28 @@ function EditProfile() {
   function removeSkill(skill) {
     if (skills.includes(skill)) {
       setSkills(skills.filter((s) => s !== skill));
+    }
+  }
+
+  function addEducation(e) {
+    e.preventDefault();
+    if (
+      newEducation.college &&
+      newEducation.degree &&
+      newEducation.fieldOfStudy
+    ) {
+      setEducation([...education, newEducation]);
+    }
+    setNewEducation({
+      college: "",
+      degree: "",
+      fieldOfStudy: "",
+    });
+  }
+
+  function removeEducation(edu) {
+    if (education.includes(edu)) {
+      setEducation(education.filter((e) => e !== edu));
     }
   }
 
@@ -104,7 +139,7 @@ function EditProfile() {
                 {skills.map((skill, index) => (
                   <div
                     key={index}
-                    className="w-full h-[400px] border-[1px] border-gray-600 bg-gray-200 p-[10px] flex justify-between items-center"
+                    className="w-full h-[40px] border-[1px] border-gray-600 bg-gray-200 p-[10px] flex justify-between items-center"
                   >
                     <span>
                       {skill}{" "}
@@ -128,6 +163,65 @@ function EditProfile() {
               <button
                 className="w-[100%] h-[40px] rounded-full border-2 border-[#2dc0ff] text-[#2dc0ff]"
                 onClick={addSkill}
+              >
+                Add
+              </button>
+            </div>
+          </div>
+          <div className="w-full p-[10px] border-2 border-gray-600 flex flex-col gap-[10px] rounded-lg">
+            <h1 className="text-[19px] font-semibold">Education</h1>
+            {education && (
+              <div className="flex flex-col gap-[10px]">
+                {education.map((edu, index) => (
+                  <div
+                    key={index}
+                    className="w-full border-[1px] border-gray-600 bg-gray-200 p-[10px] flex justify-between items-center"
+                  >
+                    <span>
+                      {skill}{" "}
+                      <RxCross1
+                        className="w-[20px] h-[20px] text-gray-800 font-bold cursor-pointer"
+                        onClick={() => removeEducation(edu)}
+                      />
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div action="" className="flex flex-col gap-[10px] items-start">
+              <input
+                type="text"
+                placeholder="college"
+                value={newEducation.college}
+                onChange={(e) =>
+                  setNewEducation({ ...newEducation, college: e.target.value })
+                }
+                className="w-full h-[50px] outline-none border-gray-600 px-[10px] py[5px] text-[16px] border-2 rounded-lg"
+              />
+              <input
+                type="text"
+                placeholder="degree"
+                value={newEducation.degree}
+                onChange={(e) =>
+                  setNewEducation({ ...newEducation, degree: e.target.value })
+                }
+                className="w-full h-[50px] outline-none border-gray-600 px-[10px] py[5px] text-[16px] border-2 rounded-lg"
+              />
+              <input
+                type="text"
+                placeholder="field of study"
+                value={newEducation.fieldOfStudy}
+                onChange={(e) =>
+                  setNewEducation({
+                    ...newEducation,
+                    fieldOfStudy: e.target.value,
+                  })
+                }
+                className="w-full h-[50px] outline-none border-gray-600 px-[10px] py[5px] text-[16px] border-2 rounded-lg"
+              />
+              <button
+                className="w-[100%] h-[40px] rounded-full border-2 border-[#2dc0ff] text-[#2dc0ff]"
+                onClick={addEducation}
               >
                 Add
               </button>
