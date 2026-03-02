@@ -5,9 +5,11 @@ import dp from "../assets/dp.webp";
 import { FiPlus } from "react-icons/fi";
 import { FiCamera } from "react-icons/fi";
 import { set } from "mongoose";
+import axios from "axios";
 
 function EditProfile() {
   let { edit, setEdit, userData, setUserData } = useContext(userDataContext);
+  let { serverUrl } = useContext(serverUrlContext);
   let [firstName, setFirstName] = useState(userData.firstName || "");
   let [lastName, setLastName] = useState(userData.lastName || "");
   let [userName, setUserName] = useState(userData.userName || "");
@@ -110,6 +112,37 @@ function EditProfile() {
     setBackendCoverImage(file);
     setFrontendCoverImage(URL.createObjectURL(file));
   }
+
+  const handleSaveProfile = async () => {
+    try {
+      let formdata = new FormData();
+      formdata.append("firstName", firstName);
+      formdata.append("lastName", lastName);
+      formdata.append("userName", userName);
+      formdata.append("headline", headline);
+      formdata.append("location", location);
+      formdata.append("gender", gender);
+      formdata.append("skills", JSON.stringify(skills));
+      formdata.append("education", JSON.stringify(education));
+      formdata.append("experience", JSON.stringify(experience));
+      if (backendProfileImage) {
+        formdata.append("profileImage", backendProfileImage);
+      }
+      if (backendCoverImage) {
+        formdata.append("coverImage", backendCoverImage);
+      }
+
+      let result = await axios.put(
+        serverUrl + "/api/user/updateprofile",
+        formdata,
+        { withCredentials: true },
+      );
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="w-full h-[100vh] fixed top-0 z-[100] flex justify-center items-center">
       <input
@@ -359,7 +392,10 @@ function EditProfile() {
               </button>
             </div>
           </div>
-          <button className="w-[100%] h-[40px] rounded-full border-2 border-[#2dc0ff] text-[#2dc0ff]">
+          <button
+            className="w-[100%] h-[40px] rounded-full border-2 border-[#2dc0ff] text-[#2dc0ff]"
+            onClick={() => handleSaveProfile()}
+          >
             Save Profile
           </button>
         </div>
