@@ -29,6 +29,19 @@ function EditProfile() {
     description: "",
   });
 
+  let [frontendProfileImage, setFrontendProfileImage] = useState(
+    userData.profileImage || dp,
+  );
+  let [backendProfileImage, setBackendProfileImage] = useState(null);
+
+  let [frontendCoverImage, setFrontendCoverImage] = useState(
+    userData.coverImage || dp,
+  );
+  let [backendCoverImage, setBackendCoverImage] = useState(null);
+
+  const profileImage = useRef();
+  const coverImage = useRef();
+
   function addSkill(e) {
     e.preventDefault();
     if (newSkills && !skills.includes(newSkills)) {
@@ -86,8 +99,34 @@ function EditProfile() {
     }
   }
 
+  function handlProfileImage(e) {
+    let file = e.target.files[0];
+    setBackendProfileImage(file);
+    setFrontendProfileImage(URL.createObjectURL(file));
+  }
+
+  function handlCoverImage(e) {
+    let file = e.target.files[0];
+    setBackendCoverImage(file);
+    setFrontendCoverImage(URL.createObjectURL(file));
+  }
   return (
     <div className="w-full h-[100vh] fixed top-0 z-[100] flex justify-center items-center">
+      <input
+        type="file"
+        accept="image/*"
+        hidden
+        ref={profileImage}
+        onChange={handleProfileImage}
+      />
+      <input
+        type="file"
+        accept="image/*"
+        hidden
+        ref={coverImage}
+        onChange={handleCoverImage}
+      />
+
       <div className="w-full h-full bg-black opacity-[0.5] absolute"></div>
       <div className="w-[90%] max-w-[500px] h-[600px] bg-white relative z-[200] shadow-lg rounded-lg p-[10px]">
         <div
