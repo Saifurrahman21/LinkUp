@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import Nav from "../components/Nav";
 import dp from "../assets/dp.webp";
 import { FiPlus } from "react-icons/fi";
@@ -6,12 +6,13 @@ import { FiCamera } from "react-icons/fi";
 import { HiPencil } from "react-icons/hi";
 import { userDataContext } from "../context/userContext";
 import EditProfile from "../components/EditProfile";
+import { RxCross1 } from "react-icons/rx";
 
 function Home() {
   let { userData, setUserData, edit, setEdit } = useContext(userDataContext);
 
   return (
-    <div className="w-full min-h-[100vh] bg-[#f0efe7] pt-[100px] flex items-start justify-center gap-[20px] px-[20px]">
+    <div className="w-full min-h-[100vh] bg-[#f0efe7] pt-[100px] flex items-start justify-center gap-[20px] px-[20px] relative">
       {edit && <EditProfile />}
       <Nav />
       <div className="w-full lg:w-[25%] min-h-[200px] bg-white shadow-lg rounded-lg relative">
@@ -47,8 +48,37 @@ function Home() {
           Edit Profile <HiPencil />
         </button>
       </div>
-      <div className="w-full lg:w-[50%] min-h-[200px] bg-white shadow-lg"></div>
-      <div className="w-full lg:w-[25%] min-h-[200px] bg-white shadow-lg"></div>
+
+      <div className="w-full h-full bg-black absolute top-0 z-[100] left-0 opacity-[0.6]"></div>
+      <div className="w-[90%] max-w-[500px] h-[600px] bg-white shadow-lg rounded-lg absolute z-[200] p-[20px] flex items-start justify-start flex-col gap-[20px]">
+        <div className="absolute top-[20px] right-[20px] cursor-pointer ">
+          <RxCross1 className="w-[25px] cursor-pointer h-[25px] text-gray-800 font-bold" />
+        </div>
+        <div className="flex justify-center items-center gap-[10px]">
+          <div className="w-[70px] h-[70px] rounded-full overflow-hidden flex items-center justify-center  cursor-pointer">
+            <img src={userData.profileImage || dp} alt="" className="h-full" />
+          </div>
+          <div>
+            <div className="text-[22px]">{`${userData.firstName} ${userData.lastName}`}</div>
+          </div>
+        </div>
+        <textarea
+          className="w-full h-[200px] outline-none border-none p-[10px] resize-none text-[19px]"
+          placeholder="what do you want to talk about...?"
+        ></textarea>
+      </div>
+
+      <div className="w-full lg:w-[50%] min-h-[200px] bg-white shadow-lg">
+        <div className="w-full h-[120px] bg-white shadow-lg rounded-lg flex items-center justify-center gap-[10px">
+          <div className="w-[70px] h-[70px] rounded-full overflow-hidden flex items-center justify-center  cursor-pointer">
+            <img src={userData.profileImage || dp} alt="" className="h-full" />
+          </div>
+          <button className="w-[80%] h-[60px]  rounded-full border-2 border-gray-500 flex items-center justify-start px-[][20px] text-gray-500 hover:bg-gray-200">
+            Start a Post
+          </button>
+        </div>
+      </div>
+      <div className="w-full lg:w-[25%] min-h-[200px] bg-[#f0efe7] shadow-lg"></div>
     </div>
   );
 }
