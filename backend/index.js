@@ -19,6 +19,8 @@ app.use(
 let port = process.env.PORT || 5000;
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/post", postRouter);
+
 app.listen(port, () => {
   connectDb();
   console.log(`Server is running on port ${port}`);
