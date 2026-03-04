@@ -7,6 +7,7 @@ import { HiPencil } from "react-icons/hi";
 import { userDataContext } from "../context/userContext";
 import EditProfile from "../components/EditProfile";
 import { RxCross1 } from "react-icons/rx";
+import { BsImage } from "react-icons/bs";
 
 function Home() {
   let { userData, setUserData, edit, setEdit } = useContext(userDataContext);
@@ -63,9 +64,19 @@ function Home() {
           </div>
         </div>
         <textarea
-          className="w-full h-[200px] outline-none border-none p-[10px] resize-none text-[19px]"
+          className="w-full h-[550px] outline-none border-none p-[10px] resize-none text-[19px]"
           placeholder="what do you want to talk about...?"
         ></textarea>
+        <div className="w-full h-[200px] flex flex-col">
+          <div className="p-[20px] flex items-center justify-start border-b-2 border-b-gray-500">
+            <BsImage className="w-[24px] h-[24px] text-gray-500 cursor-pointer" />
+          </div>
+          <div className="flex justify-end">
+            <button className="w-[100%] h-[50px] rounded-full bg-[#24b2ff] mt-[40px] text-white">
+              Post
+            </button>
+          </div>
+        </div>
       </div>
 
       <div className="w-full lg:w-[50%] min-h-[200px] bg-white shadow-lg">
