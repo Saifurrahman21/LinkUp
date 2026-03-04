@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import dp from "../assets/dp.webp";
 import moment from "moment";
+import { BiLike } from "react-icons/bi";
+import { FaRegCommentDots } from "react-icons/fa";
 
 function Post({ id, author, like, comment, description, image, createdAt }) {
   let [more, setMore] = useState(false);
@@ -35,6 +37,29 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
           <img src={image} alt="" className="h-full rounded-lg" />
         </div>
       )}
+      <div>
+        <div className="w-full flex justify-between items-center p-[20px] border-b-2 border-b-gray-500">
+          <div className="flex items-center justify-center gap-[5px] text-[18px]">
+            <BiLike className="text-[#1ebbff] w-[20px] h-[20px]" />
+            <span>{like.length}</span>
+          </div>
+          <div className="flex items-center justify-center gap-[5px] text-[18px]">
+            <span>{comment.length}</span>
+            <span> comments</span>
+          </div>
+        </div>
+
+        <div className="flex justify-start items-center w-full p-[20px] gap-[20px]">
+          <div className="flex justify-center items-center gap-[5px]">
+            <BiLike className="w-[24px] h-[24px]" />
+            <span>Like</span>
+          </div>
+          <div className="flex justify-center items-center gap-[5px]">
+            <FaRegCommentDots className="w-[24px] h-[24px]" />
+            <span>Comment</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
