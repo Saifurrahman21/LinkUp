@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import dp from "../assets/dp.webp";
 import moment from "moment";
 import { BiLike } from "react-icons/bi";
@@ -6,12 +6,18 @@ import { FaRegCommentDots } from "react-icons/fa";
 import { authDataContext } from "../context/AuthContext";
 import { userDataContext } from "../context/userContext";
 import { BiSolidLike } from "react-icons/bi";
+import { LuSendHorizontal } from "react-icons/lu";
+import axios from "axios";
+import { set } from "mongoose";
 
 function Post({ id, author, like, comment, description, image, createdAt }) {
   let [more, setMore] = useState(false);
   let { serverUrl } = useContext(authDataContext);
   let [userData, setuserData, getPost] = useContext(userDataContext);
   let [likes, setLikes] = useState(like || []);
+  let [commentsContent, setCommentsContent] = useState("");
+  let [comments, setComments] = useState(comment || []);
+  let [showComments, setShowComments] = useState(false);
 
   const handleLike = async () => {
     try {
@@ -24,9 +30,26 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
     }
   };
 
+  const handleComment = async (e) => {
+    e.preventDefault();
+    try {
+      let result = await axios.post(
+        serverUrl + `/api/post/comment/${id}`,
+        { content: commentsContent },
+        {
+          withCredentials: true,
+        },
+      );
+      setComments(result.data.comments);
+      setCommentsContent("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getPost();
-  }, [likes, setLikes]);
+  }, [likes, setLikes, comments]);
 
   return (
     <div className="w-full min-h-[200px] flex flex-col gap-[10px] bg-white rounded-lg shadow-lg p-[20px]">
@@ -65,7 +88,10 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
             <BiLike className="text-[#1ebbff] w-[20px] h-[20px]" />
             <span>{likes.length}</span>
           </div>
-          <div className="flex items-center justify-center gap-[5px] text-[18px]">
+          <div
+            className="flex items-center justify-center gap-[5px] text-[18px] cursor-pointer"
+            onClick={() => setShowComments((prev) => !prev)}
+          >
             <span>{comment.length}</span>
             <span> comments</span>
           </div>
@@ -92,10 +118,53 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
           )}
 
           <div className="flex justify-center items-center gap-[5px]">
-            <FaRegCommentDots className="w-[24px] h-[24px]" />
+            <FaRegCommentDots
+              className="w-[24px] h-[24px] cursor-pointer"
+              onClick={() => setShowComments((prev) => !prev)}
+            />
             <span>Comment</span>
           </div>
         </div>
+        {showComments && (
+          <div>
+            <form
+              action=""
+              className="w-full flex justify-between items-center border-b-2 border-b-gray-300 p-[10px]"
+              omSubmit={handleComment}
+            >
+              <input
+                type="text"
+                placeholder={"leave a comment"}
+                className="outline-none border-none"
+                value={commentsContent}
+                onChange={(e) => setCommentsContent(e.target.value)}
+              />
+              <button>
+                <LuSendHorizontal className="text-[#07a4ff] w-[22px] h-[22px]" />
+              </button>
+            </form>
+            <div className="flex flex-col gap-[10px]">
+              {comments.map((com) => (
+                <div className="flex flex-col gap-[10px] border-b-2 border-b-gray-300 p-[20px]">
+                  <div className="w-full flex justify-start items-center gap-[10px]">
+                    <div className="w-[40px] h-[40px] rounded-full overflow-hidden flex items-center justify-center  cursor-pointer">
+                      <img
+                        src={com.user.profileImage || dp}
+                        alt=""
+                        className="h-full"
+                      />
+                    </div>
+                    <div>
+                      <div className="text-[16px] font-semibold">{`${com.user.firstName} ${com.user.lastName}`}</div>
+                      <div>{moment(com.createAt).fromNow()}</div>
+                    </div>
+                  </div>
+                  <div className="pl-[50px]">{com.content}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
