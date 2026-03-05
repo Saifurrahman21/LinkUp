@@ -1,11 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dp from "../assets/dp.webp";
 import moment from "moment";
 import { BiLike } from "react-icons/bi";
 import { FaRegCommentDots } from "react-icons/fa";
+import { authDataContext } from "../context/AuthContext";
+import { userDataContext } from "../context/userContext";
+import { BiSolidLike } from "react-icons/bi";
 
 function Post({ id, author, like, comment, description, image, createdAt }) {
   let [more, setMore] = useState(false);
+  let { serverUrl } = useContext(authDataContext);
+  let [userData, setuserData, getPost] = useContext(userDataContext);
+  let [likes, setLikes] = useState(like || []);
+
+  const handleLike = async () => {
+    try {
+      let result = await axios.get(serverUrl + `/api/post/like/${id}`, {
+        withCredentials: true,
+      });
+      setLikes(result.data.like);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getPost();
+  }, [likes, setLikes]);
+
   return (
     <div className="w-full min-h-[200px] flex flex-col gap-[10px] bg-white rounded-lg shadow-lg p-[20px]">
       <div className="flex justify-between items-center">
@@ -41,7 +63,7 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
         <div className="w-full flex justify-between items-center p-[20px] border-b-2 border-b-gray-500">
           <div className="flex items-center justify-center gap-[5px] text-[18px]">
             <BiLike className="text-[#1ebbff] w-[20px] h-[20px]" />
-            <span>{like.length}</span>
+            <span>{likes.length}</span>
           </div>
           <div className="flex items-center justify-center gap-[5px] text-[18px]">
             <span>{comment.length}</span>
@@ -50,10 +72,25 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
         </div>
 
         <div className="flex justify-start items-center w-full p-[20px] gap-[20px]">
-          <div className="flex justify-center items-center gap-[5px]">
-            <BiLike className="w-[24px] h-[24px]" />
-            <span>Like</span>
-          </div>
+          {!likes.includes(userData._id) && (
+            <div
+              className="flex justify-center items-center gap-[5px]"
+              onClick={handleLike}
+            >
+              <BiLike className="w-[24px] h-[24px]" />
+              <span>Like</span>
+            </div>
+          )}
+          {likes.includes(userData._id) && (
+            <div
+              className="flex justify-center items-center gap-[5px]"
+              onClick={handleLike}
+            >
+              <BiSolidLike className="w-[24px] h-[24px] text-[#07a4ff]" />
+              <span className="text-[#07a4ff] font-semibold">Liked</span>
+            </div>
+          )}
+
           <div className="flex justify-center items-center gap-[5px]">
             <FaRegCommentDots className="w-[24px] h-[24px]" />
             <span>Comment</span>
