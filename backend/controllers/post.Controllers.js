@@ -77,6 +77,8 @@ export const comment = async (req, res) => {
       { new: true },
     ).populate("comment.user", "firstName lastname profileImage headline");
 
+    io.emit("commentAdded", { postId, comm: post.comment });
+
     return res.status(200).json(post);
   } catch (error) {
     return res.status(500).json({ message: "comment error" });
