@@ -1,5 +1,6 @@
 import Post from "../models/post.model.js";
 import uploadCloudinary from "../config/cloudinary.js";
+import { io } from "../index.js";
 export const createPost = async (req, res) => {
   try {
     let { description } = req.body;
@@ -45,8 +46,12 @@ export const like = async (req, res) => {
     }
     if (post.like.includes(userId)) {
       post.like = post.like.filter((id) => id != userId);
+    } else {
+      post.like.push(userId);
     }
     await post.save();
+    io.emit("likeUpdated", { postId, likes: post.like });
+
     return res.status(200).json(post);
   } catch (error) {
     return res.status(500).json({ message: "like error" });

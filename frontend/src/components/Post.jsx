@@ -9,7 +9,9 @@ import { BiSolidLike } from "react-icons/bi";
 import { LuSendHorizontal } from "react-icons/lu";
 import axios from "axios";
 import { set } from "mongoose";
+import io from "socket.io-client";
 
+let socket = io("http://localhost:8000");
 function Post({ id, author, like, comment, description, image, createdAt }) {
   let [more, setMore] = useState(false);
   let { serverUrl } = useContext(authDataContext);
@@ -46,6 +48,18 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    socket.on("likeUpdated", ({ postId, likes }) => {
+      if (postId == id) {
+        setLikes(likes);
+      }
+    });
+
+    return () => {
+      socket.off("likeUpdated");
+    };
+  }, [id]);
 
   useEffect(() => {
     getPost();
