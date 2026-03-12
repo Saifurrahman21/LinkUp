@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import { userDataContext } from "./context/UserContext.jsx";
+import { userDataContext } from "../context/UserContext.jsx";
 import Network from "./pages/Network";
 import Profile from "./pages/Profile";
 import Notification from "./pages/Notification";
@@ -35,6 +35,10 @@ function App() {
       <Route
         path="/notification"
         element={userData ? <Notification /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/"
+        element={userData ? <Network /> : <Navigate to="/login" />}
       />
     </Routes>
   );

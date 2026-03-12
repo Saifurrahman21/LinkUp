@@ -1,4 +1,6 @@
-import Connection from "../models/connection.model";
+import Connection from "../models/connection.model.js";
+import User from "../models/user.model.js";
+import { io, userSocketMap } from "../index.js";
 
 export const sendConnection = async (req, res) => {
   try {
@@ -15,7 +17,7 @@ export const sendConnection = async (req, res) => {
     }
     let existingConnection = await Connection.findOne({
       sender,
-      reciever,
+      receiver,
       staus: "pending",
     });
     if (existingConnection) {
@@ -23,8 +25,26 @@ export const sendConnection = async (req, res) => {
     }
     let newRequest = await Connection.create({
       sender,
-      reciever: id,
+      receiver: id,
     });
+
+    let receiverSocketId = userSocketMap.get(id);
+    let senderSocketId = userSocketMap.get(sender);
+
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("statusUpdate", {
+        updatedUserId: sender,
+        newStatus: "recieved",
+      });
+    }
+
+    if (senderSocketId) {
+      io.to(senderSocketId).emit("statusUpdate", {
+        updatedUserId: id,
+        newStatus: "pending",
+      });
+    }
+
     return res.status(200).json(newRequest);
   } catch (error) {
     return res.status(500).json({ message: `senderconnection error ${error}` });
@@ -50,10 +70,28 @@ export const acceptConnection = async (req, res) => {
         connection: connection.sender._id,
       },
     });
-    (await User.findByIdAndUpdate(connection.sender._id),
-      {
-        $addToSet: { connection: req.userId },
+    await User.findByIdAndUpdate(connection.sender._id, {
+      $addToSet: { connection: req.userId },
+    });
+
+    let receiverSocketId = userSocketMap.get(
+      connection.receiver._id.toString(),
+    );
+    let senderSocketId = userSocketMap.get(connection.sender.id.toString());
+
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("statusUpdate", {
+        updatedUserId: connection.sender.id,
+        newStatus: "disconnect",
       });
+    }
+
+    if (senderSocketId) {
+      io.to(senderSocketId).emit("statusUpdate", {
+        updatedUserId: req.userId,
+        newStatus: "disconnect",
+      });
+    }
 
     return res.status(200).json({ message: " connection accepted" });
   } catch (error) {
@@ -100,7 +138,7 @@ export const getConnectionStatus = async (req, res) => {
         },
         {
           sender: targetUserId,
-          reciever: currentUser,
+          receiver: currentUser,
         },
       ],
       status: "pending",
@@ -127,6 +165,23 @@ export const removeConnection = async (req, res) => {
     await User.findByIdAndUpdate(myId, { $pull: { connection: otherUserId } });
     await User.findByIdAndUpdate(otherUserId, { $pull: { connection: myId } });
 
+    let receiverSocketId = userSocketMap.get(otherUserId);
+    let senderSocketId = userSocketMap.get(myId);
+
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("statusUpdate", {
+        updatedUserId: myId,
+        newStatus: "connect",
+      });
+    }
+
+    if (senderSocketId) {
+      io.to(senderSocketId).emit("statusUpdate", {
+        updatedUserId: otherUserId,
+        newStatus: "connect",
+      });
+    }
+
     return res.json({ message: "Connection removed Successfully" });
   } catch (error) {
     return res.status(500).json({ message: "remove Connection error" });
@@ -138,7 +193,7 @@ export const getConnectionRequests = async (req, res) => {
     const userId = req.userId;
 
     const requests = await Connection.find({
-      reciever: userId,
+      receiver: userId,
       status: "pending",
     }).populate(
       "sender",

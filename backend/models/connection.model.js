@@ -10,7 +10,7 @@ let connectionSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    statue: {
+    status: {
       type: String,
       enum: ["pending", "accepted", "rejected"],
       default: "pending",

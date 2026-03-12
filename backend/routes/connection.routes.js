@@ -12,11 +12,11 @@ import isAuth from "../middleware/isAuth.js";
 
 let connectionRouter = express.Router();
 
-connectionRouter.get("/send/:id", isAuth, sendConnection);
-connectionRouter.get("/accept/:connectionId", isAuth, acceptConnection);
-connectionRouter.get("/reject/connectionId", isAuth, rejectConnection);
+connectionRouter.post("/send/:id", isAuth, sendConnection);
+connectionRouter.put("/accept/:connectionId", isAuth, acceptConnection);
+connectionRouter.put("/reject/connectionId", isAuth, rejectConnection);
 connectionRouter.get("/getsStatus/userId", isAuth, getConnectionStatus);
-connectionRouter.get("/remove/:userId", isAuth, removeConnection);
+connectionRouter.delete("/remove/:userId", isAuth, removeConnection);
 
 connectionRouter.get("/requests", isAuth, getConnectionRequests);
 connectionRouter.get("/", isAuth, getUserConnections);
