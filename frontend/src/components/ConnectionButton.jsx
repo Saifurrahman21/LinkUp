@@ -77,8 +77,9 @@ function ConnectionButton({ userId }) {
     <button
       className="min-w-[100%] h-[40px] rounded-full border-2 border-[#2dc0ff]"
       onClick={handleClick}
+      disabled={status == "pending"}
     >
-      Connect
+      {status}
     </button>
   );
 }
