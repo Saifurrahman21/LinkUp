@@ -28,7 +28,6 @@ function ConnectionButton({ userId }) {
     try {
       let result = await axios.delete(
         `${serverUrl}/api/connection/remove/${userId}`,
-        {},
         { withCredential: true },
       );
     } catch (error) {
