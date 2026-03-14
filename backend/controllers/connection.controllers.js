@@ -216,7 +216,7 @@ export const getUserConnections = async (req, res) => {
       "firstName lastName userName profileImage headline connection",
     );
 
-    return res.status.json(user.connection);
+    return res.status(200).json(user.connection);
   } catch (error) {
     console.error("Error in getUserConnections controller:", error);
     res.status(500).json({ message: "Server error" });
