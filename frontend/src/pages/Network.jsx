@@ -60,7 +60,7 @@ function Network() {
         Invitations {connections.length}
       </div>
       {connections.length > 0 && (
-        <div className="w-[100%] max-w-[900px] shadow-lg rounded-lg flex flex-col gap-[20px] min-h-[100px]">
+        <div className="w-[100%] max-w-[900px] bg-white shadow-lg rounded-lg flex flex-col gap-[20px] min-h-[100px]">
           {connections.map((connection, index) => (
             <div className="w-full min-h-[100px] p-[20px] flex justify-between items-center">
               <div className="flex justify-center items-center gap-[10px]">

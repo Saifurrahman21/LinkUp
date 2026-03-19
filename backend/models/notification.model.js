@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { comment, like } from "../controllers/post.Controllers";
 
 const notificationSchema = new mongoose.Schema(
   {
