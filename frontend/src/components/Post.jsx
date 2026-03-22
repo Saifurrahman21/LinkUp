@@ -1,28 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
 import dp from "../assets/dp.webp";
 import moment from "moment";
-import { BiLike } from "react-icons/bi";
 import { FaRegCommentDots } from "react-icons/fa";
+import { BiLike } from "react-icons/bi";
+import axios from "axios";
 import { authDataContext } from "../context/AuthContext";
 import { userDataContext } from "../context/userContext";
 import { BiSolidLike } from "react-icons/bi";
 import { LuSendHorizontal } from "react-icons/lu";
-import axios from "axios";
-import { set } from "mongoose";
-import io from "socket.io-client";
+import { io } from "socket.io-client";
 import ConnectionButton from "./ConnectionButton";
 
 let socket = io("http://localhost:8000");
 function Post({ id, author, like, comment, description, image, createdAt }) {
   let [more, setMore] = useState(false);
   let { serverUrl } = useContext(authDataContext);
-  let [userData, setuserData, getPost, handleGetProfile] =
+  let { userData, setUserData, getPost, handleGetProfile } =
     useContext(userDataContext);
-  let [likes, setLikes] = useState(like || []);
-  let [commentsContent, setCommentsContent] = useState("");
-  let [comments, setComments] = useState(comment || []);
-  let [showComments, setShowComments] = useState(false);
-
+  let [likes, setLikes] = useState(like);
+  let [commentContent, setCommentContent] = useState("");
+  let [comments, setComments] = useState(comment);
+  let [showComment, setShowComment] = useState(false);
   const handleLike = async () => {
     try {
       let result = await axios.get(serverUrl + `/api/post/like/${id}`, {
@@ -33,19 +31,18 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
       console.log(error);
     }
   };
-
   const handleComment = async (e) => {
     e.preventDefault();
     try {
       let result = await axios.post(
         serverUrl + `/api/post/comment/${id}`,
-        { content: commentsContent },
         {
-          withCredentials: true,
+          content: commentContent,
         },
+        { withCredentials: true },
       );
-      setComments(result.data.comments);
-      setCommentsContent("");
+      setComments(result.data.comment);
+      setCommentContent("");
     } catch (error) {
       console.log(error);
     }
@@ -57,7 +54,6 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
         setLikes(likes);
       }
     });
-
     socket.on("commentAdded", ({ postId, comm }) => {
       if (postId == id) {
         setComments(comm);
@@ -72,10 +68,10 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
 
   useEffect(() => {
     getPost();
-  }, [likes, setLikes, comments]);
+  }, [likes, comments]);
 
   return (
-    <div className="w-full min-h-[200px] flex flex-col gap-[10px] bg-white rounded-lg shadow-lg p-[20px]">
+    <div className="w-full min-h-[200px] flex flex-col gap-[10px] bg-white rounded-lg shadow-lg  p-[20px] ">
       <div className="flex justify-between items-center">
         <div
           className="flex justify-center items-start gap-[10px]"
@@ -85,9 +81,9 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
             <img src={author.profileImage || dp} alt="" className="h-full" />
           </div>
           <div>
-            <div className="text-[24px] font-bold">{`${author.firstName} ${author.lastName}`}</div>
-            <div className="text-[16px] ">{author.headline}</div>
-            <div className="text-[16px] ">{moment(createdAt).fromNow()}</div>
+            <div className="text-[22px] font-semibold">{`${author.firstName} ${author.lastName}`}</div>
+            <div className="text-[16px]">{author.headline}</div>
+            <div className="text-[16px]">{moment(createdAt).fromNow()}</div>
           </div>
         </div>
         <div>
@@ -97,7 +93,7 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
         </div>
       </div>
       <div
-        className={`w-full ${!more ? "max-h-[100px] overflow-hidden" : ""}  pl-[50px]`}
+        className={`w-full ${!more ? "max-h-[100px] overflow-hidden" : ""} pl-[50px]`}
       >
         {description}
       </div>
@@ -107,75 +103,81 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
       >
         {more ? "read less..." : "read more..."}
       </div>
+
       {image && (
-        <div className="w-full h-[300px]  overflow-hidden flex justify-center rounded-lg">
+        <div className="w-full h-[300px] overflow-hidden flex justify-center rounded-lg">
           <img src={image} alt="" className="h-full rounded-lg" />
         </div>
       )}
+
       <div>
-        <div className="w-full flex justify-between items-center p-[20px] border-b-2 border-b-gray-500">
+        <div className="w-full flex justify-between items-center p-[20px] border-b-2 border-gray-500">
           <div className="flex items-center justify-center gap-[5px] text-[18px]">
             <BiLike className="text-[#1ebbff] w-[20px] h-[20px]" />
             <span>{likes.length}</span>
           </div>
           <div
             className="flex items-center justify-center gap-[5px] text-[18px] cursor-pointer"
-            onClick={() => setShowComments((prev) => !prev)}
+            onClick={() => setShowComment((prev) => !prev)}
           >
             <span>{comment.length}</span>
-            <span> comments</span>
+            <span>comments</span>
           </div>
         </div>
-
         <div className="flex justify-start items-center w-full p-[20px] gap-[20px]">
           {!likes.includes(userData._id) && (
             <div
-              className="flex justify-center items-center gap-[5px]"
+              className="flex justify-center items-center gap-[5px] cursor-pointer"
               onClick={handleLike}
             >
-              <BiLike className="w-[24px] h-[24px]" />
+              <BiLike className=" w-[24px] h-[24px]" />
               <span>Like</span>
             </div>
           )}
           {likes.includes(userData._id) && (
             <div
-              className="flex justify-center items-center gap-[5px]"
+              className="flex justify-center items-center gap-[5px] cursor-pointer"
               onClick={handleLike}
             >
-              <BiSolidLike className="w-[24px] h-[24px] text-[#07a4ff]" />
+              <BiSolidLike className=" w-[24px] h-[24px] text-[#07a4ff]" />
               <span className="text-[#07a4ff] font-semibold">Liked</span>
             </div>
           )}
 
-          <div className="flex justify-center items-center gap-[5px]">
-            <FaRegCommentDots
-              className="w-[24px] h-[24px] cursor-pointer"
-              onClick={() => setShowComments((prev) => !prev)}
-            />
-            <span>Comment</span>
+          <div
+            className="flex justify-center items-center gap-[5px] cursor-pointer"
+            onClick={() => setShowComment((prev) => !prev)}
+          >
+            <FaRegCommentDots className=" w-[24px] h-[24px]" />
+            <span>comment</span>
           </div>
         </div>
-        {showComments && (
+
+        {showComment && (
           <div>
             <form
-              action=""
-              className="w-full flex justify-between items-center border-b-2 border-b-gray-300 p-[10px]"
-              omSubmit={handleComment}
+              className="w-full flex justify-between items-center border-b-2 border-b-gray-300 p-[10px] 
+    "
+              onSubmit={handleComment}
             >
               <input
                 type="text"
                 placeholder={"leave a comment"}
-                className="outline-none border-none"
-                value={commentsContent}
-                onChange={(e) => setCommentsContent(e.target.value)}
+                className="outline-none  border-none"
+                value={commentContent}
+                onChange={(e) => setCommentContent(e.target.value)}
               />
               <button>
                 <LuSendHorizontal className="text-[#07a4ff] w-[22px] h-[22px]" />
               </button>
             </form>
+
             <div className="flex flex-col gap-[10px]">
               {comments.map((com) => (
-                <div className="flex flex-col gap-[10px] border-b-2 border-b-gray-300 p-[20px]">
+                <div
+                  key={com._id}
+                  className="flex flex-col gap-[10px] border-b-2 p-[20px] border-b-gray-300"
+                >
                   <div className="w-full flex justify-start items-center gap-[10px]">
                     <div className="w-[40px] h-[40px] rounded-full overflow-hidden flex items-center justify-center  cursor-pointer">
                       <img
@@ -184,10 +186,8 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
                         className="h-full"
                       />
                     </div>
-                    <div>
-                      <div className="text-[16px] font-semibold">{`${com.user.firstName} ${com.user.lastName}`}</div>
-                      <div>{moment(com.createAt).fromNow()}</div>
-                    </div>
+
+                    <div className="text-[16px] font-semibold">{`${com.user.firstName} ${com.user.lastName}`}</div>
                   </div>
                   <div className="pl-[50px]">{com.content}</div>
                 </div>

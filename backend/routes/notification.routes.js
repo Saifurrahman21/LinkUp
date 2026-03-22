@@ -3,8 +3,8 @@ import {
   clearAllNotification,
   deleteNotification,
   getNotifications,
-} from "../controllers/notification.controllers";
-import isAuth from "../middlewares/isAuth";
+} from "../controllers/notification.controllers.js";
+import isAuth from "../middlewares/isAuth.js";
 
 let notificationRouter = express.Router();
 

@@ -9,10 +9,7 @@ import EditProfile from "../components/EditProfile";
 import { RxCross1 } from "react-icons/rx";
 import { BsImage } from "react-icons/bs";
 import { authDataContext } from "../context/AuthContext";
-import { set } from "mongoose";
 import Post from "../components/Post";
-import { getPost } from "../../../backend/controllers/post.Controllers";
-import { getSuggestedUser } from "../../../backend/controllers/user.controllers";
 
 function Home() {
   let {
@@ -120,7 +117,7 @@ function Home() {
       )}
 
       {uploadPost && (
-        <div className="w-[90%] max-w-[500px] h-[600px] bg-white shadow-lg rounded-lg fixed z-[200] p-[20px] flex items-start justify-start flex-col gap-[20px]">
+        <div className="w-[90%] max-w-[500px] h-[600px] bg-white shadow-lg top-[100px] rounded-lg fixed z-[200] p-[20px] flex items-start justify-start flex-col gap-[20px]">
           <div className="absolute top-[20px] right-[20px] cursor-pointer ">
             <RxCross1
               className="w-[25px] cursor-pointer h-[25px] text-gray-800 font-bold"
@@ -176,8 +173,8 @@ function Home() {
       )}
 
       <div className="w-full lg:w-[50%] min-h-[200px] bg-[#f0efe7] shadow-lg flex flex-col gap-[20px]">
-        <div className="w-full h-[120px] bg-white shadow-lg rounded-lg flex items-center justify-center gap-[10px">
-          <div className="w-[70px] h-[70px] rounded-full overflow-hidden flex items-center justify-center  cursor-pointer">
+        <div className="w-full h-[120px] bg-white shadow-lg rounded-lg flex items-center justify-center gap-[24px] p-4">
+          <div className="w-[70px] h-[70px] rounded-full overflow-hidden flex items-center justify-center cursor-pointer">
             <img src={userData.profileImage || dp} alt="" className="h-full" />
           </div>
           <button

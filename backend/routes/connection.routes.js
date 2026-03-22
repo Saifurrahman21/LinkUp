@@ -8,7 +8,7 @@ import {
   removeConnection,
   sendConnection,
 } from "../controllers/connection.controllers.js";
-import isAuth from "../middleware/isAuth.js";
+import isAuth from "../middlewares/isAuth.js";
 
 let connectionRouter = express.Router();
 
