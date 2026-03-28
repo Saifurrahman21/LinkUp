@@ -3,14 +3,14 @@ import Nav from "../components/Nav";
 import dp from "../assets/dp.webp";
 import { FiPlus } from "react-icons/fi";
 import { FiCamera } from "react-icons/fi";
-import { HiPencil } from "react-icons/hi";
 import { userDataContext } from "../context/userContext";
+import { HiPencil } from "react-icons/hi2";
 import EditProfile from "../components/EditProfile";
 import { RxCross1 } from "react-icons/rx";
 import { BsImage } from "react-icons/bs";
+import axios from "axios";
 import { authDataContext } from "../context/AuthContext";
 import Post from "../components/Post";
-
 function Home() {
   let {
     userData,
@@ -30,7 +30,6 @@ function Home() {
   let image = useRef();
   let [posting, setPosting] = useState(false);
   let [suggestedUser, setSuggestedUser] = useState([]);
-
   function handleImage(e) {
     let file = e.target.files[0];
     setBackendImage(file);
@@ -48,18 +47,20 @@ function Home() {
       let result = await axios.post(serverUrl + "/api/post/create", formdata, {
         withCredentials: true,
       });
+      console.log(result);
       setPosting(false);
+      setUploadPost(false);
     } catch (error) {
       setPosting(false);
       console.log(error);
     }
   }
-
   const handleSuggestedUsers = async () => {
     try {
-      let result = await axios.get(serverUrl + "/api/user/suggestedUsers", {
+      let result = await axios.get(serverUrl + "/api/user/suggestedusers", {
         withCredentials: true,
       });
+      console.log(result.data);
       setSuggestedUser(result.data);
     } catch (error) {
       console.log(error);
@@ -75,12 +76,14 @@ function Home() {
   }, [uploadPost]);
 
   return (
-    <div className="w-full min-h-[100vh] bg-[#f0efe7] pt-[100px] flex items-center lg:items-start justify-center gap-[20px] px-[20px] relative pb-[50px]">
+    <div className="w-full min-h-[100vh] bg-[#f0efe7] pt-[100px] flex items-center lg:items-start justify-center gap-[20px] px-[20px] flex-col lg:flex-row relative pb-[50px]">
       {edit && <EditProfile />}
+
       <Nav />
-      <div className="w-full lg:w-[25%] min-h-[200px] bg-white shadow-lg rounded-lg relative">
+
+      <div className="w-full lg:w-[25%] min-h-[200px] bg-[white] shadow-lg rounded-lg p-[10px] relative ">
         <div
-          className="w-[100%] h-[100px] bg-gray-400 rounded overflow-hidden flex items-center justify-center cursor-pointer"
+          className="w-[100%] h-[100px] bg-gray-400 rounded overflow-hidden flex items-center justify-center relative cursor-pointer"
           onClick={() => setEdit(true)}
         >
           <img src={userData.coverImage || ""} alt="" className="w-full" />
@@ -92,17 +95,16 @@ function Home() {
         >
           <img src={userData.profileImage || dp} alt="" className="h-full" />
         </div>
-        <div className="w-[10px] h-[10px] bg-[#17c1ff] absolute top-[105px] left-[90px] rounded-full flex justify-center items-center cursor-pointer">
+        <div className="w-[20px] h-[20px] bg-[#17c1ff] absolute top-[105px] left-[90px] rounded-full flex justify-center items-center cursor-pointer">
           <FiPlus className="text-white" />
         </div>
+
         <div className="mt-[30px] pl-[20px]  font-semibold text-gray-700">
           <div className="text-[22px]">{`${userData.firstName} ${userData.lastName}`}</div>
           <div className="text-[18px] font-semibold text-gray-600">
             {userData.headline || ""}
           </div>
-          <div className="text-[16px] font-semibold text-gray-500">
-            {userData.location}
-          </div>
+          <div className="text-[16px]text-gray-500">{userData.location}</div>
         </div>
         <button
           className="w-[100%] h-[40px] my-[20px] rounded-full border-2 border-[#2dc0ff] text-[#2dc0ff] flex items-center justify-center gap-[10px]"
@@ -111,39 +113,36 @@ function Home() {
           Edit Profile <HiPencil />
         </button>
       </div>
-
       {uploadPost && (
         <div className="w-full h-full bg-black fixed top-0 z-[100] left-0 opacity-[0.6]"></div>
       )}
 
       {uploadPost && (
-        <div className="w-[90%] max-w-[500px] h-[600px] bg-white shadow-lg top-[100px] rounded-lg fixed z-[200] p-[20px] flex items-start justify-start flex-col gap-[20px]">
-          <div className="absolute top-[20px] right-[20px] cursor-pointer ">
+        <div className="w-[90%] max-w-[500px] h-[90vh] bg-white shadow-lg top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-lg fixed z-[200] p-[20px] flex items-start justify-start flex-col gap-[20px] overflow-y-auto">
+          <div className="absolute top-[20px] right-[20px] cursor-pointer  ">
             <RxCross1
-              className="w-[25px] cursor-pointer h-[25px] text-gray-800 font-bold"
+              className="w-[25px] cursor-pointer h-[25px] text-gray-800 font-bold "
               onClick={() => setUploadPost(false)}
             />
           </div>
-          <div className="flex justify-center items-center gap-[10px]">
-            <div className="w-[70px] h-[70px] rounded-full overflow-hidden flex items-center justify-center  cursor-pointer">
+          <div className="flex justify-start items-center gap-[10px]">
+            <div className="w-[70px] h-[70px] rounded-full overflow-hidden flex items-center justify-center cursor-pointer">
               <img
                 src={userData.profileImage || dp}
                 alt=""
                 className="h-full"
               />
             </div>
-            <div>
-              <div className="text-[22px]">{`${userData.firstName} ${userData.lastName}`}</div>
-            </div>
+            <div className="text-[22px]">{`${userData.firstName} ${userData.lastName}`}</div>
           </div>
           <textarea
             className={`w-full ${frontendImage ? "h-[200px]" : "h-[550px]"} outline-none border-none p-[10px] resize-none text-[19px]`}
-            placeholder="what do you want to talk about...?"
+            placeholder="what do you want to talk about..?"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
           <input type="file" ref={image} hidden onChange={handleImage} />
-          <div className="w-full h-[300px] overflow-hidden justify-center items-center rounded-lg">
+          <div className="w-full h-[300px] overflow-hidden flex justify-center items-center rounded-lg">
             <img
               src={frontendImage || ""}
               alt=""
@@ -152,16 +151,16 @@ function Home() {
           </div>
 
           <div className="w-full h-[200px] flex flex-col">
-            <div className="p-[20px] flex items-center justify-start border-b-2 border-b-gray-500">
+            <div className="p-[20px] flex items-center justify-start border-b-2 border-gray-500">
               <BsImage
-                className="w-[24px] h-[24px] text-gray-500 cursor-pointer"
+                className="w-[24px] h-[24px] text-gray-500"
                 onClick={() => image.current.click()}
               />
             </div>
 
             <div className="flex justify-end items-center">
               <button
-                className="w-[100%] h-[50px] rounded-full bg-[#24b2ff] mt-[40px] text-white"
+                className="w-[100px] h-[50px] rounded-full bg-[#24b2ff] mt-[40px] text-white"
                 disabled={posting}
                 onClick={handleUploadPost}
               >
@@ -172,21 +171,22 @@ function Home() {
         </div>
       )}
 
-      <div className="w-full lg:w-[50%] min-h-[200px] bg-[#f0efe7] shadow-lg flex flex-col gap-[20px]">
-        <div className="w-full h-[120px] bg-white shadow-lg rounded-lg flex items-center justify-center gap-[24px] p-4">
-          <div className="w-[70px] h-[70px] rounded-full overflow-hidden flex items-center justify-center cursor-pointer">
+      <div className=" w-full lg:w-[50%] min-h-[200px] bg-bg-[#f0efe7] flex flex-col gap-[20px]">
+        <div className="w-full h-[120px] bg-white shadow-lg rounded-lg flex items-center p-[20px]  justify-center gap-[10px]">
+          <div className="w-[70px] h-[70px] rounded-full overflow-hidden flex items-center justify-center  cursor-pointer">
             <img src={userData.profileImage || dp} alt="" className="h-full" />
           </div>
           <button
-            className="w-[80%] h-[60px]  rounded-full border-2 border-gray-500 flex items-center justify-start px-[20px] text-gray-500 hover:bg-gray-200"
+            className="w-[80%] h-[60px] border-2 rounded-full border-gray-500 flex items-center justify-start px-[20px] hover:bg-gray-200"
             onClick={() => setUploadPost(true)}
           >
-            Start a Post
+            start a post
           </button>
         </div>
-        {postData.map((post, index) => (
+
+        {postData.map((post) => (
           <Post
-            key={index}
+            key={post._id}
             id={post._id}
             description={post.description}
             author={post.author}
@@ -197,7 +197,8 @@ function Home() {
           />
         ))}
       </div>
-      <div className="w-full lg:w-[25%] min-h-[200px] bg-[#f0efe7] shadow-lg hidden lg:flex flex-col p-[20px]">
+
+      <div className="w-full lg:w-[25%] min-h-[200px] bg-[white] shadow-lg hidden lg:flex flex-col p-[20px] rounded-lg">
         <h1 className="text-[20px] text-gray-600 font-semibold">
           Suggested Users
         </h1>

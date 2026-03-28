@@ -51,10 +51,10 @@ function Network() {
     handleGetRequests();
   }, []);
   return (
-    <div className="w-screen h-[100vh] bg-[#f0efe7] pt-[100px] px-[20px] flex flex-col items-center gap-[40px]">
+    <div className="w-screen min-h-screen bg-[#f0efe7] pt-[100px] px-[20px] flex flex-col items-center gap-[30px]">
       <Nav />
-      <div className="w-full h-[100px] bg-[white] shadow-lg rounded-lg flex items-center p-[10px] text-[22px] text-gray-600">
-        Invitations {connections.length}
+      <div className="w-full max-w-[900px] h-[80px] bg-white shadow-md rounded-xl flex items-center px-6 text-lg text-gray-700 justify-between">
+        <div className="font-semibold">Invitations ({connections.length})</div>
       </div>
 
       {connections.length > 0 && (

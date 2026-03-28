@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import logo from "../assets/logo.svg";
+import logo2 from "../assets/logo2.png";
 import { useNavigate } from "react-router-dom";
 import { authDataContext } from "../context/AuthContext";
 import axios from "axios";
@@ -39,8 +39,15 @@ function Login() {
   };
   return (
     <div className="w-full h-screen bg-[white] flex flex-col items-center justify-start gap-[10px]">
-      <div className="p-[30px] lg:p-[35px] w-full h-[80px] flex items-center">
-        <img src={logo} alt="" />
+      <div className="w-full flex items-center justify-start px-[40px] pt-[25px] gap-[8px]">
+        <img
+          src={logo2}
+          alt="logo"
+          className="w-[75px] h-auto object-contain rounded-lg"
+        />
+        <h1 className="text-[#0A66C2] text-[48px] font-bold leading-none">
+          LinkUp
+        </h1>
       </div>
       <form
         className="w-[90%] max-w-[400px] h-[600px] md:shadow-xl flex flex-col justify-center  gap-[10px] p-[15px]"

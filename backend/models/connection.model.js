@@ -6,7 +6,7 @@ let connectionSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    reciever: {
+    receiver: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
@@ -20,5 +20,4 @@ let connectionSchema = new mongoose.Schema(
 );
 
 const Connection = mongoose.model("Connection", connectionSchema);
-
 export default Connection;

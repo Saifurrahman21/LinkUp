@@ -54,60 +54,81 @@ function Notification() {
     handleGetNotification();
   }, []);
   return (
-    <div className="w-screen h-[100vh] bg-[#f0efe7] pt-[100px] px-[20px] flex flex-col items-center gap-[40px]">
+    <div className="w-screen min-h-screen bg-[#f0efe7] pt-[100px] px-[20px] flex flex-col items-center gap-[30px]">
       <Nav />
-      <div className="w-full h-[100px] bg-[white] shadow-lg rounded-lg flex items-center p-[10px] text-[22px] text-gray-600 justify-between">
-        <div>Notifications {notificationData.length}</div>
-        {notificationData > 0 && (
+
+      {/* HEADER */}
+      <div className="w-full max-w-[900px] h-[80px] bg-white shadow-md rounded-xl flex items-center px-6 text-lg text-gray-700 justify-between">
+        <div className="font-semibold">
+          Notifications ({notificationData.length})
+        </div>
+
+        {notificationData.length > 0 && (
           <button
-            className="min-w-[100px] h-[40px] rounded-full border-2 border-[#ec4545] text-[#ec4545]"
+            className="px-4 py-2 rounded-full border border-red-400 text-red-500 hover:bg-red-50 transition"
             onClick={handleClearAllNotification}
           >
-            clear all
+            Clear All
           </button>
         )}
       </div>
 
-      {notificationData.length > 0 && (
-        <div className="w-[100%] max-w-[900px] bg-white shadow-lg rounded-lg flex flex-col gap-[20px] min-h-[100px]">
-          {notificationData.map((noti, index) => (
+      {/* NOTIFICATION LIST */}
+      {notificationData.length > 0 ? (
+        <div className="w-full max-w-[900px] bg-white shadow-md rounded-xl overflow-hidden">
+          {notificationData.map((noti) => (
             <div
-              className="w-full min-h-[100px] p-[20px] flex justify-between items-center border-b-2 border-b-gray-200"
-              key={index}
+              key={noti._id} // ✅ FIXED
+              className="flex justify-between items-start gap-4 p-4 border-b last:border-none hover:bg-gray-50 transition"
             >
-              <div>
-                <div className="flex justify-center items-center gap-[10px]">
-                  <div className="w-[60px] h-[60px] rounded-full overflow-hidden cursor-pointer">
-                    <img
-                      src={noti.relatedUser.profileImage || dp}
-                      alt=""
-                      className="w-full h-full"
-                    />
-                  </div>
-                  <div className="text-[19px] font-semibold text-gray-700">{`${noti.relatedUser.firstName} ${noti.relatedUser.lastName} ${handleMessage(noti.type)}`}</div>
+              {/* LEFT SECTION */}
+              <div className="flex gap-4">
+                {/* PROFILE IMAGE */}
+                <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+                  <img
+                    src={noti.relatedUser.profileImage || dp}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                {noti.relatedPost && (
-                  <div className="flex items-center gap-[10px] ml-[80px] h-[70px] overflow-hidden">
-                    <div className="w-[80px] h-[50px] overflow-hidden">
+
+                {/* TEXT + POST */}
+                <div className="flex flex-col gap-2">
+                  <div className="text-gray-800 text-sm leading-snug">
+                    <span className="font-semibold">
+                      {noti.relatedUser.firstName} {noti.relatedUser.lastName}
+                    </span>{" "}
+                    {handleMessage(noti.type)}
+                  </div>
+
+                  {/* POST PREVIEW */}
+                  {noti.relatedPost && (
+                    <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-2 w-fit">
                       <img
                         src={noti.relatedPost.image}
                         alt=""
-                        className="h-full"
+                        className="w-16 h-12 object-cover rounded-md"
                       />
+                      <p className="text-xs text-gray-600 max-w-[200px] truncate">
+                        {noti.relatedPost.description}
+                      </p>
                     </div>
-                    <div>{noti.relatedPost.description}</div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-              <div
-                className="flex justify-center items-center gap-[10px]"
+
+              {/* DELETE BUTTON */}
+              <button
                 onClick={() => handledeleteNotification(noti._id)}
+                className="p-2 rounded-full hover:bg-red-100 transition"
               >
-                <RxCross1 className="w-[25px] cursor-pointer h-[25px] text-gray-800 font-bold " />
-              </div>
+                <RxCross1 className="w-4 h-4 text-gray-500 hover:text-red-500" />
+              </button>
             </div>
           ))}
         </div>
+      ) : (
+        <div className="text-gray-500 mt-10">No notifications</div>
       )}
     </div>
   );

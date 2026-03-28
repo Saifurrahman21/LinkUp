@@ -39,7 +39,11 @@ function Profile() {
       <div className="w-full max-w-[900px] min-h-[100vh] flex flex-col gap-[10px]">
         <div className="relative bg-[white] pb-[40px] rounded shadow-lg">
           <div className="w-[100%] h-[100px] bg-gray-400 rounded overflow-hidden flex items-center justify-center relative cursor-pointer">
-            <img src={profileData.coverImage || ""} alt="" className="w-full" />
+            <img
+              src={profileData.coverImage || ""}
+              alt=""
+              className="w-full h-full"
+            />
           </div>
           <div className="w-[70px] h-[70px] rounded-full overflow-hidden flex items-center justify-center absolute top-[65px] left-[35px] cursor-pointer">
             <img
@@ -48,9 +52,9 @@ function Profile() {
               className="h-full"
             />
           </div>
-          <div className="mt-[30px] pl-[20px]  font-semibold text-gray-700">
+          <div className="mt-[40px] pl-[20px]  font-semibold text-gray-700">
             <div className="text-[22px]">{`${profileData.firstName} ${profileData.lastName}`}</div>
-            <div className="text-[18px] font-semibold text-gray-600">
+            <div className="text-[17px] font-semibold text-gray-600">
               {profileData.headline || ""}
             </div>
             <div className="text-[16px]text-gray-500">
@@ -135,10 +139,10 @@ function Profile() {
             <div className="flex flex-col justify-start items-start gap-[20px] text-gray-600 p-[20px]">
               {profileData.experience.map((ex) => (
                 <>
-                  <div className="text-[20px]">title : {ex.title}</div>
+                  <div className="text-[20px]">Title : {ex.title}</div>
                   <div className="text-[20px]">Company : {ex.company}</div>
                   <div className="text-[20px]">
-                    description : {ex.description}
+                    Description : {ex.description}
                   </div>
                 </>
               ))}

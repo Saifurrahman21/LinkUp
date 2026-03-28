@@ -120,7 +120,7 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
             className="flex items-center justify-center gap-[5px] text-[18px] cursor-pointer"
             onClick={() => setShowComment((prev) => !prev)}
           >
-            <span>{comment.length}</span>
+            <span>{comments.length}</span>
             <span>comments</span>
           </div>
         </div>

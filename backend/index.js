@@ -42,8 +42,16 @@ io.on("connection", (socket) => {
     userSocketMap.set(userId, socket.id);
   });
 
-  socket.on("disconnect", (socket) => {
-    console.log("user disconnected", socket.id);
+  socket.on("disconnect", (reason) => {
+    console.log("user disconnected", socket.id, "reason:", reason);
+
+    // cleanup map entry for this socket
+    for (let [userId, sid] of userSocketMap.entries()) {
+      if (sid === socket.id) {
+        userSocketMap.delete(userId);
+        break;
+      }
+    }
   });
 });
 

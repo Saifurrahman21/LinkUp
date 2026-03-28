@@ -1,5 +1,5 @@
-import Post from "../models/post.model.js";
-import uploadCloudinary from "../config/cloudinary.js";
+import Post from "../models/Post.model.js";
+import uploadOnCloudinary from "../config/cloudinary.js";
 import { io } from "../index.js";
 import Notification from "../models/notification.model.js";
 export const createPost = async (req, res) => {
@@ -7,21 +7,21 @@ export const createPost = async (req, res) => {
     let { description } = req.body;
     let newPost;
     if (req.file) {
-      let image = await uploadCloudinary(req.file.path);
+      let image = await uploadOnCloudinary(req.file.path);
       newPost = await Post.create({
-        authoer: req.userId,
+        author: req.userId,
         description,
         image,
       });
     } else {
       newPost = await Post.create({
-        authoer: req.userId,
+        author: req.userId,
         description,
       });
     }
+    return res.status(201).json(newPost);
   } catch (error) {
-    console.log(error);
-    return res.status(201).json({ message: `create post error ${error}` });
+    return res.status(201).json(`create post error ${error}`);
   }
 };
 
@@ -33,7 +33,7 @@ export const getPost = async (req, res) => {
       .sort({ createdAt: -1 });
     return res.status(200).json(post);
   } catch (error) {
-    return res.status(500).json({ message: "getpost error" });
+    return res.status(500).json({ message: "getPost error" });
   }
 };
 
@@ -51,7 +51,7 @@ export const like = async (req, res) => {
       post.like.push(userId);
       if (post.author != userId) {
         let notification = await Notification.create({
-          reciever: post.author,
+          receiver: post.author,
           type: "like",
           relatedUser: userId,
           relatedPost: postId,
@@ -63,7 +63,7 @@ export const like = async (req, res) => {
 
     return res.status(200).json(post);
   } catch (error) {
-    return res.status(500).json({ message: "like error" });
+    return res.status(500).json({ message: `like error ${error}` });
   }
 };
 
@@ -76,28 +76,21 @@ export const comment = async (req, res) => {
     let post = await Post.findByIdAndUpdate(
       postId,
       {
-        $push: {
-          comment: {
-            content,
-            user: userId,
-          },
-        },
+        $push: { comment: { content, user: userId } },
       },
       { new: true },
-    ).populate("comment.user", "firstName lastname profileImage headline");
+    ).populate("comment.user", "firstName lastName profileImage headline");
     if (post.author != userId) {
       let notification = await Notification.create({
-        reciever: post.author,
+        receiver: post.author,
         type: "comment",
         relatedUser: userId,
         relatedPost: postId,
       });
     }
-
     io.emit("commentAdded", { postId, comm: post.comment });
-
     return res.status(200).json(post);
   } catch (error) {
-    return res.status(500).json({ message: "comment error" });
+    return res.status(500).json({ message: `comment error ${error}` });
   }
 };

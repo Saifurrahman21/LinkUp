@@ -6,7 +6,7 @@ import {
   createPost,
   getPost,
   like,
-} from "../controllers/post.Controllers.js";
+} from "../controllers/Post.Controllers.js";
 const postRouter = express.Router();
 
 postRouter.post("/create", isAuth, upload.single("image"), createPost);
