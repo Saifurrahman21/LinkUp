@@ -389,7 +389,7 @@ function EditProfile() {
 
           <button
             className="w-[100%] h-[50px] rounded-full bg-[#24b2ff] mt-[20px] text-white"
-            disable={saving}
+            disabled={saving}
             onClick={() => handleSaveProfile()}
           >
             {saving ? "saving..." : "Save Profile"}
