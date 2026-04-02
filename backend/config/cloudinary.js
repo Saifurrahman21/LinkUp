@@ -13,22 +13,19 @@ const uploadOnCloudinary = async (filePath) => {
 
     const uploadResult = await cloudinary.uploader.upload(filePath);
 
-    // safely delete file
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
 
     return uploadResult.secure_url;
-
   } catch (error) {
     console.log("Cloudinary Error:", error);
 
-    // safely delete file if exists
     if (filePath && fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
 
-    throw error; 
+    throw error;
   }
 };
 
