@@ -78,7 +78,7 @@ function Notification() {
         <div className="w-full max-w-[900px] bg-white shadow-md rounded-xl overflow-hidden">
           {notificationData.map((noti) => (
             <div
-              key={noti._id} // ✅ FIXED
+              key={noti._id} 
               className="flex justify-between items-start gap-4 p-4 border-b last:border-none hover:bg-gray-50 transition"
             >
               {/* LEFT SECTION */}
