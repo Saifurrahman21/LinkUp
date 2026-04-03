@@ -48,7 +48,14 @@ function Home() {
         withCredentials: true,
       });
       console.log(result);
-      setPostData([result.data, ...postData]);
+      setPostData([
+        {
+          ...result.data,
+          like: Array.isArray(result.data.like) ? result.data.like : [],
+          comment: Array.isArray(result.data.comment) ? result.data.comment : [],
+        },
+        ...postData,
+      ]);
       setPosting(false);
       setUploadPost(false);
     } catch (error) {
