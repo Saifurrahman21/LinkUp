@@ -10,6 +10,7 @@ function UserContext({ children }) {
   let [edit, setEdit] = useState(false);
   let [postData, setPostData] = useState([]);
   let [profileData, setProfileData] = useState([]);
+  let [loading, setLoading] = useState(true);
   let navigate = useNavigate();
   const getCurrentUser = async () => {
     try {
@@ -17,10 +18,12 @@ function UserContext({ children }) {
         withCredentials: true,
       });
       setUserData(result.data);
+      setLoading(false);
       return;
     } catch (error) {
       console.log(error);
       setUserData(null);
+      setLoading(false);
     }
   };
 
@@ -67,6 +70,7 @@ function UserContext({ children }) {
     handleGetProfile,
     profileData,
     setProfileData,
+    loading,
   };
   return (
     <div>

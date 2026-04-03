@@ -3,7 +3,7 @@ import logo2 from "../assets/logo2.png";
 import { useNavigate } from "react-router-dom";
 import { authDataContext } from "../context/AuthContext";
 import axios from "axios";
-import { userDataContext } from "../context/userContext";
+import { userDataContext } from "../context/UserContext";
 function Signup() {
   let [show, setShow] = useState(false);
   let { serverUrl } = useContext(authDataContext);
@@ -43,7 +43,9 @@ function Signup() {
       setPassword("");
       setUserName("");
     } catch (error) {
-      setErr(error.response.data.message);
+      setErr(
+        error?.response?.data?.message || error?.message || "Signup failed",
+      );
       setLoading(false);
     }
   };

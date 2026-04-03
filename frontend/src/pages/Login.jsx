@@ -3,7 +3,7 @@ import logo2 from "../assets/logo2.png";
 import { useNavigate } from "react-router-dom";
 import { authDataContext } from "../context/AuthContext";
 import axios from "axios";
-import { userDataContext } from "../context/userContext";
+import { userDataContext } from "../context/UserContext";
 function Login() {
   let [show, setShow] = useState(false);
   let { serverUrl } = useContext(authDataContext);
@@ -33,7 +33,9 @@ function Login() {
       setEmail("");
       setPassword("");
     } catch (error) {
-      setErr(error.response.data.message);
+      setErr(
+        error?.response?.data?.message || error?.message || "Login failed",
+      );
       setLoading(false);
     }
   };
@@ -65,12 +67,12 @@ function Login() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <div className="w-[100%] h-[50px] border-2 border-gray-600 text-gray-800 text-[18px]  rounded-md relative">
+        <div className="w-[100%] h-[50px] border-2 border-gray-600 text-gray-800 text-[18px] rounded-md relative">
           <input
             type={show ? "text" : "password"}
             placeholder="password"
             required
-            className="w-full h-fullborder-none text-gray-800 text-[18px] px-[20px] py-[10px] rounded-md"
+            className="w-full h-full border-none text-gray-800 text-[18px] px-[20px] py-[10px] rounded-md"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { authDataContext } from "../context/AuthContext";
 import axios from "axios";
 import io from "socket.io-client";
-import { userDataContext } from "../context/userContext";
+import { userDataContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 const socket = io("http://localhost:8000");
 function ConnectionButton({ userId }) {
@@ -47,6 +47,8 @@ function ConnectionButton({ userId }) {
   };
 
   useEffect(() => {
+    if (!userData?._id || !userId || userData._id === userId) return;
+
     socket.emit("register", userData._id);
     handleGetStatus();
 
@@ -59,7 +61,7 @@ function ConnectionButton({ userId }) {
     return () => {
       socket.off("statusUpdate");
     };
-  }, [userId]);
+  }, [userId, userData]);
 
   const handleClick = async () => {
     if (status == "disconnect") {
@@ -70,6 +72,8 @@ function ConnectionButton({ userId }) {
       await handleSendConnection();
     }
   };
+
+  if (!userData || !userId || userData._id === userId) return null;
 
   return (
     <button

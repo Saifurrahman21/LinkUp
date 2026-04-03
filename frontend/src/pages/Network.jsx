@@ -10,8 +10,9 @@ import io from "socket.io-client";
 
 const socket = io("http://localhost:8000");
 function Network() {
-  let { serverUrl } = useContext(authDataContext);
   let [connections, setConnections] = useState([]);
+  let { serverUrl } = useContext(authDataContext);
+
   const handleGetRequests = async () => {
     try {
       let result = await axios.get(`${serverUrl}/api/connection/requests`, {

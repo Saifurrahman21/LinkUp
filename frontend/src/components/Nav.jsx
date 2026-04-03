@@ -5,7 +5,7 @@ import { TiHome } from "react-icons/ti";
 import { FaUserGroup } from "react-icons/fa6";
 import { IoNotificationsSharp } from "react-icons/io5";
 import dp from "../assets/dp.webp";
-import { userDataContext } from "../context/userContext";
+import { userDataContext } from "../context/UserContext";
 import { authDataContext } from "../context/AuthContext";
 import axios from "axios";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -31,9 +31,14 @@ function Nav() {
   };
 
   const handleSearch = async () => {
+    if (!searchInput || !searchInput.trim()) {
+      setSearchData([]);
+      return;
+    }
+
     try {
       let result = await axios.get(
-        `${serverUrl}/api/user/search?query=${searchInput}`,
+        `${serverUrl}/api/user/search?query=${encodeURIComponent(searchInput)}`,
         { withCredentials: true },
       );
       setSearchData(result.data);
@@ -70,6 +75,7 @@ function Nav() {
           <div className="absolute top-[90px] h-[500px] left-[0px] lg:left-[20px] shadow-lg w-[100%] lg:w-[700px] bg-white flex flex-col gap-[20px] p-[20px] overflow-auto">
             {searchData.map((sea) => (
               <div
+                key={sea._id || sea.userName}
                 className="flex gap-[20px] items-center border-b-2 border-b-gray-300 p-[10px] hover:bg-gray-200 cursor-pointer rounded-lg "
                 onClick={() => handleGetProfile(sea.userName)}
               >

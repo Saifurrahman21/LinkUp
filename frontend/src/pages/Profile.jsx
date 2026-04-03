@@ -3,7 +3,7 @@ import Nav from "../components/Nav";
 import dp from "../assets/dp.webp";
 import { FiPlus } from "react-icons/fi";
 import { FiCamera } from "react-icons/fi";
-import { userDataContext } from "../context/userContext";
+import { userDataContext } from "../context/UserContext";
 import { HiPencil } from "react-icons/hi2";
 import { authDataContext } from "../context/AuthContext";
 import axios from "axios";
@@ -30,6 +30,14 @@ function Profile() {
       postData.filter((post) => post.author._id == profileData._id),
     );
   }, [profileData]);
+
+  if (!userData || !profileData?._id) {
+    return (
+      <div className="w-full min-h-[100vh] bg-[#f0efe7] flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-[100vh] bg-[#f0efe7] flex flex-col items-center pt-[100px] pb-[40px]">
@@ -78,9 +86,9 @@ function Profile() {
         </div>
         <div className="w-full min-h-[100px] flex items-center p-[20px] text-[22px] text-gray-600 font-semibold bg-white shadow-lg rounded-lg">{`Post (${profilePost.length})`}</div>
 
-        {profilePost.map((post, index) => (
+        {profilePost.map((post) => (
           <Post
-            key={index}
+            key={post._id}
             id={post._id}
             description={post.description}
             author={post.author}
@@ -94,8 +102,10 @@ function Profile() {
           <div className="w-full min-h-[100px] flex flex-col gap-[10px] justify-center p-[20px] font-semibold bg-white shadow-lg rounded-lg  ">
             <div className="text-[22px] text-gray-600 ">Skills</div>
             <div className="flex flex-wrap justify-start items-center gap-[20px] text-gray-600 p-[20px]">
-              {profileData.skills.map((skill) => (
-                <div className="text-[20px]">{skill}</div>
+              {profileData.skills.map((skill, idx) => (
+                <div key={idx} className="text-[20px]">
+                  {skill}
+                </div>
               ))}
               {profileData._id == userData._id && (
                 <button
@@ -113,13 +123,13 @@ function Profile() {
             <div className="text-[22px] text-gray-600 ">Education</div>
             <div className="flex flex-col justify-start items-start gap-[20px] text-gray-600 p-[20px]">
               {profileData.education.map((edu) => (
-                <>
+                <div key={edu._id || `${edu.college}-${edu.degree}`}>
                   <div className="text-[20px]">College : {edu.college}</div>
                   <div className="text-[20px]">Degree : {edu.degree}</div>
                   <div className="text-[20px]">
                     Field Of Study : {edu.fieldOfStudy}
                   </div>
-                </>
+                </div>
               ))}
 
               {profileData._id == userData._id && (
@@ -138,13 +148,13 @@ function Profile() {
             <div className="text-[22px] text-gray-600 ">Experience</div>
             <div className="flex flex-col justify-start items-start gap-[20px] text-gray-600 p-[20px]">
               {profileData.experience.map((ex) => (
-                <>
+                <div key={ex._id || `${ex.title}-${ex.company}`}>
                   <div className="text-[20px]">Title : {ex.title}</div>
                   <div className="text-[20px]">Company : {ex.company}</div>
                   <div className="text-[20px]">
                     Description : {ex.description}
                   </div>
-                </>
+                </div>
               ))}
               {profileData._id == userData._id && (
                 <button

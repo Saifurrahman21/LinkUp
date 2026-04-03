@@ -3,13 +3,22 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import { userDataContext } from "./context/userContext";
+import { userDataContext } from "./context/UserContext";
 import Network from "./pages/Network";
 import Profile from "./pages/Profile";
 import Notification from "./pages/Notification";
 
 function App() {
-  let { userData } = useContext(userDataContext);
+  let { userData, loading } = useContext(userDataContext);
+
+  if (loading) {
+    return (
+      <div className="w-full h-screen bg-[#f0efe7] flex items-center justify-center">
+        <div className="text-2xl text-gray-600">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <Routes>
       <Route

@@ -5,7 +5,7 @@ import { FaRegCommentDots } from "react-icons/fa";
 import { BiLike } from "react-icons/bi";
 import axios from "axios";
 import { authDataContext } from "../context/AuthContext";
-import { userDataContext } from "../context/userContext";
+import { userDataContext } from "../context/UserContext";
 import { BiSolidLike } from "react-icons/bi";
 import { LuSendHorizontal } from "react-icons/lu";
 import { io } from "socket.io-client";
@@ -14,9 +14,9 @@ import ConnectionButton from "./ConnectionButton";
 let socket = io("http://localhost:8000");
 function Post({ id, author, like, comment, description, image, createdAt }) {
   let [more, setMore] = useState(false);
-  let { serverUrl } = useContext(authDataContext);
   let { userData, setUserData, getPost, handleGetProfile } =
     useContext(userDataContext);
+  let { serverUrl } = useContext(authDataContext);
   let [likes, setLikes] = useState(like);
   let [commentContent, setCommentContent] = useState("");
   let [comments, setComments] = useState(comment);
@@ -87,7 +87,7 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
           </div>
         </div>
         <div>
-          {userData._id != author._id && (
+          {userData?._id && userData._id !== author._id && (
             <ConnectionButton userId={author._id} />
           )}
         </div>
@@ -175,7 +175,7 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
             <div className="flex flex-col gap-[10px]">
               {comments.map((com) => (
                 <div
-                  key={com._id}
+                  key={com._id || `${com.userId}-${com._id}`}
                   className="flex flex-col gap-[10px] border-b-2 p-[20px] border-b-gray-300"
                 >
                   <div className="w-full flex justify-start items-center gap-[10px]">
