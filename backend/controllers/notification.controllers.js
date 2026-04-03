@@ -19,7 +19,7 @@ export const deleteNotification = async (req, res) => {
     });
     return res
       .status(200)
-      .json({ message: " notification deleted successfully" });
+      .json({ message: "notification deleted successfully" });
   } catch (error) {
     return res
       .status(500)
@@ -33,7 +33,7 @@ export const clearAllNotification = async (req, res) => {
     });
     return res
       .status(200)
-      .json({ message: " notification deleted successfully" });
+      .json({ message: "notification deleted successfully" });
   } catch (error) {
     return res
       .status(500)

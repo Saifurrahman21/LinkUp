@@ -33,9 +33,7 @@ function Login() {
       setEmail("");
       setPassword("");
     } catch (error) {
-      setErr(
-        error?.response?.data?.message || error?.message || "Login failed",
-      );
+      setErr(error.response.data.message);
       setLoading(false);
     }
   };
@@ -45,7 +43,7 @@ function Login() {
         <img
           src={logo2}
           alt="logo"
-          className="w-[75px] h-auto object-contain rounded-lg"
+          className="w-[70px] h-auto object-contain rounded-lg"
         />
         <h1 className="text-[#0A66C2] text-[48px] font-bold leading-none">
           LinkUp
@@ -67,12 +65,12 @@ function Login() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <div className="w-[100%] h-[50px] border-2 border-gray-600 text-gray-800 text-[18px] rounded-md relative">
+        <div className="w-[100%] h-[50px] border-2 border-gray-600 text-gray-800 text-[18px]  rounded-md relative">
           <input
             type={show ? "text" : "password"}
             placeholder="password"
             required
-            className="w-full h-full border-none text-gray-800 text-[18px] px-[20px] py-[10px] rounded-md"
+            className="w-full h-fullborder-none text-gray-800 text-[18px] px-[20px] py-[10px] rounded-md"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

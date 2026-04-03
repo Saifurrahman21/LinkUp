@@ -13,7 +13,7 @@ import ConnectionButton from "../components/ConnectionButton";
 function Profile() {
   let {
     userData,
-    setuserData,
+    setUserData,
     edit,
     setEdit,
     postData,
@@ -31,14 +31,6 @@ function Profile() {
     );
   }, [profileData]);
 
-  if (!userData || !profileData?._id) {
-    return (
-      <div className="w-full min-h-[100vh] bg-[#f0efe7] flex items-center justify-center">
-        Loading...
-      </div>
-    );
-  }
-
   return (
     <div className="w-full min-h-[100vh] bg-[#f0efe7] flex flex-col items-center pt-[100px] pb-[40px]">
       <Nav />
@@ -47,11 +39,7 @@ function Profile() {
       <div className="w-full max-w-[900px] min-h-[100vh] flex flex-col gap-[10px]">
         <div className="relative bg-[white] pb-[40px] rounded shadow-lg">
           <div className="w-[100%] h-[100px] bg-gray-400 rounded overflow-hidden flex items-center justify-center relative cursor-pointer">
-            <img
-              src={profileData.coverImage || ""}
-              alt=""
-              className="w-full h-full"
-            />
+            <img src={profileData.coverImage || ""} alt="" className="w-full" />
           </div>
           <div className="w-[70px] h-[70px] rounded-full overflow-hidden flex items-center justify-center absolute top-[65px] left-[35px] cursor-pointer">
             <img
@@ -60,9 +48,9 @@ function Profile() {
               className="h-full"
             />
           </div>
-          <div className="mt-[40px] pl-[20px]  font-semibold text-gray-700">
+          <div className="mt-[30px] pl-[20px]  font-semibold text-gray-700">
             <div className="text-[22px]">{`${profileData.firstName} ${profileData.lastName}`}</div>
-            <div className="text-[17px] font-semibold text-gray-600">
+            <div className="text-[18px] font-semibold text-gray-600">
               {profileData.headline || ""}
             </div>
             <div className="text-[16px]text-gray-500">
@@ -86,9 +74,9 @@ function Profile() {
         </div>
         <div className="w-full min-h-[100px] flex items-center p-[20px] text-[22px] text-gray-600 font-semibold bg-white shadow-lg rounded-lg">{`Post (${profilePost.length})`}</div>
 
-        {profilePost.map((post) => (
+        {profilePost.map((post, index) => (
           <Post
-            key={post._id}
+            key={index}
             id={post._id}
             description={post.description}
             author={post.author}
@@ -102,10 +90,8 @@ function Profile() {
           <div className="w-full min-h-[100px] flex flex-col gap-[10px] justify-center p-[20px] font-semibold bg-white shadow-lg rounded-lg  ">
             <div className="text-[22px] text-gray-600 ">Skills</div>
             <div className="flex flex-wrap justify-start items-center gap-[20px] text-gray-600 p-[20px]">
-              {profileData.skills.map((skill, idx) => (
-                <div key={idx} className="text-[20px]">
-                  {skill}
-                </div>
+              {profileData.skills.map((skill) => (
+                <div className="text-[20px]">{skill}</div>
               ))}
               {profileData._id == userData._id && (
                 <button
@@ -123,13 +109,13 @@ function Profile() {
             <div className="text-[22px] text-gray-600 ">Education</div>
             <div className="flex flex-col justify-start items-start gap-[20px] text-gray-600 p-[20px]">
               {profileData.education.map((edu) => (
-                <div key={edu._id || `${edu.college}-${edu.degree}`}>
+                <>
                   <div className="text-[20px]">College : {edu.college}</div>
                   <div className="text-[20px]">Degree : {edu.degree}</div>
                   <div className="text-[20px]">
                     Field Of Study : {edu.fieldOfStudy}
                   </div>
-                </div>
+                </>
               ))}
 
               {profileData._id == userData._id && (
@@ -148,13 +134,13 @@ function Profile() {
             <div className="text-[22px] text-gray-600 ">Experience</div>
             <div className="flex flex-col justify-start items-start gap-[20px] text-gray-600 p-[20px]">
               {profileData.experience.map((ex) => (
-                <div key={ex._id || `${ex.title}-${ex.company}`}>
-                  <div className="text-[20px]">Title : {ex.title}</div>
+                <>
+                  <div className="text-[20px]">title : {ex.title}</div>
                   <div className="text-[20px]">Company : {ex.company}</div>
                   <div className="text-[20px]">
-                    Description : {ex.description}
+                    description : {ex.description}
                   </div>
-                </div>
+                </>
               ))}
               {profileData._id == userData._id && (
                 <button

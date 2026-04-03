@@ -48,6 +48,7 @@ function Home() {
         withCredentials: true,
       });
       console.log(result);
+      setPostData([result.data, ...postData]);
       setPosting(false);
       setUploadPost(false);
     } catch (error) {
@@ -118,7 +119,7 @@ function Home() {
       )}
 
       {uploadPost && (
-        <div className="w-[90%] max-w-[500px] h-[90vh] bg-white shadow-lg top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-lg fixed z-[200] p-[20px] flex items-start justify-start flex-col gap-[20px] overflow-y-auto">
+        <div className="w-[90%] max-w-[500px] h-[600px] bg-white shadow-lg top-[100px] rounded-lg fixed z-[200] p-[20px] flex items-start justify-start flex-col gap-[20px]">
           <div className="absolute top-[20px] right-[20px] cursor-pointer  ">
             <RxCross1
               className="w-[25px] cursor-pointer h-[25px] text-gray-800 font-bold "
@@ -184,9 +185,9 @@ function Home() {
           </button>
         </div>
 
-        {postData.map((post) => (
+        {postData.map((post, index) => (
           <Post
-            key={post._id}
+            key={index}
             id={post._id}
             description={post.description}
             author={post.author}
@@ -198,7 +199,7 @@ function Home() {
         ))}
       </div>
 
-      <div className="w-full lg:w-[25%] min-h-[200px] bg-[white] shadow-lg hidden lg:flex flex-col p-[20px] rounded-lg">
+      <div className="w-full lg:w-[25%] min-h-[200px] bg-[white] shadow-lg hidden lg:flex flex-col p-[20px]">
         <h1 className="text-[20px] text-gray-600 font-semibold">
           Suggested Users
         </h1>

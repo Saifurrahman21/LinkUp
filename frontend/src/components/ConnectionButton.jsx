@@ -4,7 +4,7 @@ import axios from "axios";
 import io from "socket.io-client";
 import { userDataContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
-const socket = io("https://linkup-backend-hv28.onrender.com");
+const socket = io("http://localhost:8000");
 function ConnectionButton({ userId }) {
   let { serverUrl } = useContext(authDataContext);
   let { userData, setUserData } = useContext(userDataContext);
@@ -47,8 +47,6 @@ function ConnectionButton({ userId }) {
   };
 
   useEffect(() => {
-    if (!userData?._id || !userId || userData._id === userId) return;
-
     socket.emit("register", userData._id);
     handleGetStatus();
 
@@ -61,7 +59,7 @@ function ConnectionButton({ userId }) {
     return () => {
       socket.off("statusUpdate");
     };
-  }, [userId, userData]);
+  }, [userId]);
 
   const handleClick = async () => {
     if (status == "disconnect") {
@@ -72,8 +70,6 @@ function ConnectionButton({ userId }) {
       await handleSendConnection();
     }
   };
-
-  if (!userData || !userId || userData._id === userId) return null;
 
   return (
     <button

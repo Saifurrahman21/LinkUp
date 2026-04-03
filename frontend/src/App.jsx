@@ -9,16 +9,7 @@ import Profile from "./pages/Profile";
 import Notification from "./pages/Notification";
 
 function App() {
-  let { userData, loading } = useContext(userDataContext);
-
-  if (loading) {
-    return (
-      <div className="w-full h-screen bg-[#f0efe7] flex items-center justify-center">
-        <div className="text-2xl text-gray-600">Loading...</div>
-      </div>
-    );
-  }
-
+  let { userData } = useContext(userDataContext);
   return (
     <Routes>
       <Route

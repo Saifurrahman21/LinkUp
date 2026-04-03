@@ -43,9 +43,7 @@ function Signup() {
       setPassword("");
       setUserName("");
     } catch (error) {
-      setErr(
-        error?.response?.data?.message || error?.message || "Signup failed",
-      );
+      setErr(error.response.data.message);
       setLoading(false);
     }
   };
@@ -55,7 +53,7 @@ function Signup() {
         <img
           src={logo2}
           alt="logo"
-          className="w-[75px] h-auto object-contain rounded-lg"
+          className="w-[70px] h-auto object-contain rounded-lg"
         />
         <h1 className="text-[#0A66C2] text-[48px] font-bold leading-none">
           LinkUp

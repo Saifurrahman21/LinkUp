@@ -10,7 +10,6 @@ import connectionRouter from "./routes/connection.routes.js";
 import http from "http";
 import { Server } from "socket.io";
 import notificationRouter from "./routes/notification.routes.js";
-
 dotenv.config();
 let app = express();
 let server = http.createServer(app);
@@ -35,27 +34,22 @@ app.use("/api/post", postRouter);
 app.use("/api/connection", connectionRouter);
 app.use("/api/notification", notificationRouter);
 export const userSocketMap = new Map();
-
 io.on("connection", (socket) => {
-  console.log("user connected", socket.id);
   socket.on("register", (userId) => {
     userSocketMap.set(userId, socket.id);
+    console.log(userSocketMap);
   });
-
-  socket.on("disconnect", (reason) => {
-    console.log("user disconnected", socket.id, "reason:", reason);
-
-    // cleanup map entry for this socket
-    for (let [userId, sid] of userSocketMap.entries()) {
-      if (sid === socket.id) {
-        userSocketMap.delete(userId);
-        break;
+  socket.on("disconnect", (socket) => {
+    for (let [key, value] of userSocketMap.entries()) {
+      if (value === socket.id) {
+        userSocketMap.delete(key);
       }
     }
+    console.log("User disconnected:", socket.id);
   });
 });
 
 server.listen(port, () => {
   connectDb();
-  console.log(`Server is running on port ${port}`);
+  console.log("server started");
 });

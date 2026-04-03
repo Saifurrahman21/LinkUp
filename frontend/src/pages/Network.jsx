@@ -8,7 +8,7 @@ import { RxCrossCircled } from "react-icons/rx";
 
 import io from "socket.io-client";
 
-const socket = io("https://linkup-backend-hv28.onrender.com");
+const socket = io("http://localhost:8000");
 function Network() {
   let [connections, setConnections] = useState([]);
   let { serverUrl } = useContext(authDataContext);
@@ -42,7 +42,7 @@ function Network() {
         {},
         { withCredentials: true },
       );
-      setConnections(connections.filter((con) => con._id === requestId));
+      setConnections(connections.filter((con) => con._id != requestId));
     } catch (error) {
       console.log(error);
     }

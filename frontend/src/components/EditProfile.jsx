@@ -115,7 +115,6 @@ function EditProfile() {
       formdata.append("firstName", firstName);
       formdata.append("lastName", lastName);
       formdata.append("userName", userName);
-      formdata.append("gender", gender);
       formdata.append("headline", headline);
       formdata.append("location", location);
       formdata.append("skills", JSON.stringify(skills));
@@ -144,7 +143,7 @@ function EditProfile() {
   };
 
   return (
-    <div className="w-full fixed inset-0 z-[100] flex justify-center items-start py-[40px] px-[10px]">
+    <div className="w-full h-[100vh] fixed top-0  z-[100] flex justify-center items-center">
       <input
         type="file"
         accept="image/*"
@@ -159,8 +158,8 @@ function EditProfile() {
         ref={coverImage}
         onChange={handleCoverImage}
       />
-      <div className="w-full h-full bg-black opacity-[0.5] absolute inset-0"></div>
-      <div className="w-[90%] max-w-[500px] max-h-[85vh] bg-white relative overflow-y-auto z-[200] shadow-lg rounded-lg p-[10px]">
+      <div className="w-full h-full bg-black opacity-[0.5] absolute top-0 left-0"></div>
+      <div className="w-[90%] max-w-[500px] h-[600px] bg-white relative overflow-auto z-[200] shadow-lg rounded-lg p-[10px]">
         <div
           className="absolute top-[20px] right-[20px] cursor-pointer  "
           onClick={() => setEdit(false)}
@@ -184,7 +183,7 @@ function EditProfile() {
         <div className="w-[20px] h-[20px] bg-[#17c1ff] absolute top-[200px] left-[90px] rounded-full flex justify-center items-center cursor-pointer">
           <FiPlus className="text-white" />
         </div>
-        <div className="w-full flex flex-col items-center justify-center gap-[20px] mt-[50px] pb-[20px]">
+        <div className="w-full flex flex-col items-center justify-center gap-[20px] mt-[50px]">
           <input
             type="text"
             placeholder="firstName"
@@ -388,8 +387,8 @@ function EditProfile() {
           </div>
 
           <button
-            className="w-[100%] h-[50px] rounded-full bg-[#24b2ff] mt-[20px] text-white"
-            disabled={saving}
+            className="w-[100%] h-[50px] rounded-full bg-[#24b2ff] mt-[40px] text-white"
+            disable={saving}
             onClick={() => handleSaveProfile()}
           >
             {saving ? "saving..." : "Save Profile"}

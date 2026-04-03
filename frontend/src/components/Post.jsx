@@ -14,9 +14,9 @@ import ConnectionButton from "./ConnectionButton";
 let socket = io("http://localhost:8000");
 function Post({ id, author, like, comment, description, image, createdAt }) {
   let [more, setMore] = useState(false);
+  let { serverUrl } = useContext(authDataContext);
   let { userData, setUserData, getPost, handleGetProfile } =
     useContext(userDataContext);
-  let { serverUrl } = useContext(authDataContext);
   let [likes, setLikes] = useState(like);
   let [commentContent, setCommentContent] = useState("");
   let [comments, setComments] = useState(comment);
@@ -66,10 +66,6 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
     };
   }, [id]);
 
-  useEffect(() => {
-    getPost();
-  }, [likes, comments]);
-
   return (
     <div className="w-full min-h-[200px] flex flex-col gap-[10px] bg-white rounded-lg shadow-lg  p-[20px] ">
       <div className="flex justify-between items-center">
@@ -87,7 +83,7 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
           </div>
         </div>
         <div>
-          {userData?._id && userData._id !== author._id && (
+          {userData._id != author._id && (
             <ConnectionButton userId={author._id} />
           )}
         </div>
@@ -175,7 +171,7 @@ function Post({ id, author, like, comment, description, image, createdAt }) {
             <div className="flex flex-col gap-[10px]">
               {comments.map((com) => (
                 <div
-                  key={com._id || `${com.userId}-${com._id}`}
+                  key={com._id}
                   className="flex flex-col gap-[10px] border-b-2 p-[20px] border-b-gray-300"
                 >
                   <div className="w-full flex justify-start items-center gap-[10px]">

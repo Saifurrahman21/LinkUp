@@ -6,11 +6,11 @@ export const signUp = async (req, res) => {
     const { firstName, lastName, userName, email, password } = req.body;
     let existEmail = await User.findOne({ email });
     if (existEmail) {
-      return res.status(400).json({ message: "email already exist !" });
+      return res.status(400).json({ message: "email already exists!" });
     }
     let existUsername = await User.findOne({ userName });
     if (existUsername) {
-      return res.status(400).json({ message: "userName already exist !" });
+      return res.status(400).json({ message: "userName already exists!" });
     }
     if (password.length < 8) {
       return res
@@ -18,14 +18,14 @@ export const signUp = async (req, res) => {
         .json({ message: "password must be at least 8 characters" });
     }
 
-    let hassedPassword = await bcrypt.hash(password, 10);
+    let hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
       firstName,
       lastName,
       userName,
       email,
-      password: hassedPassword,
+      password: hashedPassword,
     });
 
     let token = await genToken(user._id);

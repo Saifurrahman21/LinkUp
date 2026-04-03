@@ -1,35 +1,29 @@
-import Post from "../models/post.model.js";
+import Post from "../models/Post.model.js";
 import uploadOnCloudinary from "../config/cloudinary.js";
 import { io } from "../index.js";
 import Notification from "../models/notification.model.js";
-
-
 export const createPost = async (req, res) => {
   try {
     let { description } = req.body;
     let newPost;
-
     if (req.file) {
-      console.log("Uploaded File:", req.file);
-
       let image = await uploadOnCloudinary(req.file.path);
-
       newPost = await Post.create({
         author: req.userId,
         description,
         image,
+        like: [],
       });
     } else {
       newPost = await Post.create({
         author: req.userId,
         description,
+        like: [],
       });
     }
-
     return res.status(201).json(newPost);
   } catch (error) {
-    console.log("Create Post Error:", error);
-    return res.status(500).json({ message: `create post error: ${error.message}` });
+    return res.status(500).json(`create post error ${error}`);
   }
 };
 

@@ -11,7 +11,7 @@ export const sendConnection = async (req, res) => {
     if (sender == id) {
       return res
         .status(400)
-        .json({ message: "you can not send request yourself" });
+        .json({ message: "you cannot send request yourself" });
     }
 
     if (user.connection.includes(id)) {
@@ -24,7 +24,7 @@ export const sendConnection = async (req, res) => {
       status: "pending",
     });
     if (existingConnection) {
-      return res.status(400).json({ message: "request already exist" });
+      return res.status(400).json({ message: "request already exists" });
     }
 
     let newRequest = await Connection.create({
@@ -75,21 +75,19 @@ export const acceptConnection = async (req, res) => {
       relatedUser: userId,
     });
     await connection.save();
-    const senderId = connection.sender.toString();
-
     await User.findByIdAndUpdate(req.userId, {
-      $addToSet: { connection: senderId },
+      $addToSet: { connection: connection.sender._id },
     });
-    await User.findByIdAndUpdate(senderId, {
+    await User.findByIdAndUpdate(connection.sender._id, {
       $addToSet: { connection: userId },
     });
 
     let receiverSocketId = userSocketMap.get(userId);
-    let senderSocketId = userSocketMap.get(senderId);
+    let senderSocketId = userSocketMap.get(connection.sender._id.toString());
 
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("statusUpdate", {
-        updatedUserId: senderId,
+        updatedUserId: connection.sender._id,
         newStatus: "disconnect",
       });
     }
@@ -136,10 +134,7 @@ export const getConnectionStatus = async (req, res) => {
     const currentUserId = req.userId;
 
     let currentUser = await User.findById(currentUserId);
-    if (
-      currentUser.connection &&
-      currentUser.connection.includes(targetUserId)
-    ) {
+    if (currentUser.connection.includes(targetUserId)) {
       return res.json({ status: "disconnect" });
     }
 
