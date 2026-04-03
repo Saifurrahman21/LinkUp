@@ -75,19 +75,21 @@ export const acceptConnection = async (req, res) => {
       relatedUser: userId,
     });
     await connection.save();
+    const senderId = connection.sender.toString();
+
     await User.findByIdAndUpdate(req.userId, {
-      $addToSet: { connection: connection.sender._id },
+      $addToSet: { connection: senderId },
     });
-    await User.findByIdAndUpdate(connection.sender._id, {
+    await User.findByIdAndUpdate(senderId, {
       $addToSet: { connection: userId },
     });
 
     let receiverSocketId = userSocketMap.get(userId);
-    let senderSocketId = userSocketMap.get(connection.sender._id.toString());
+    let senderSocketId = userSocketMap.get(senderId);
 
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("statusUpdate", {
-        updatedUserId: connection.sender._id,
+        updatedUserId: senderId,
         newStatus: "disconnect",
       });
     }
@@ -134,7 +136,10 @@ export const getConnectionStatus = async (req, res) => {
     const currentUserId = req.userId;
 
     let currentUser = await User.findById(currentUserId);
-    if (currentUser.connection.includes(targetUserId)) {
+    if (
+      currentUser.connection &&
+      currentUser.connection.includes(targetUserId)
+    ) {
       return res.json({ status: "disconnect" });
     }
 

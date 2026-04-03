@@ -115,6 +115,7 @@ function EditProfile() {
       formdata.append("firstName", firstName);
       formdata.append("lastName", lastName);
       formdata.append("userName", userName);
+      formdata.append("gender", gender);
       formdata.append("headline", headline);
       formdata.append("location", location);
       formdata.append("skills", JSON.stringify(skills));
@@ -388,7 +389,7 @@ function EditProfile() {
 
           <button
             className="w-[100%] h-[50px] rounded-full bg-[#24b2ff] mt-[20px] text-white"
-            disable={saving}
+            disabled={saving}
             onClick={() => handleSaveProfile()}
           >
             {saving ? "saving..." : "Save Profile"}
