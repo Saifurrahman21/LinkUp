@@ -8,10 +8,9 @@ The goal of this project is to provide a smooth and interactive social platform 
 
 ## Live Demo
 
-- **Frontend:** (https://linkup-frontend-njma.onrender.com)
-- **Backend/API:** (https://linkup-backend-asu7.onrender.com)
+- **Deployed Link:** (https://linkup-frontend-njma.onrender.com)
 
-> Replace the above links with your deployed frontend and backend URLs.
+
 
 ---
 
